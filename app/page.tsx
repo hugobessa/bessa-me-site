@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import * as BrandIcons from "react-icons/fa";
+import chevronPatternSvg from "./assets/imgs/chevron-pattern.svg";
 
 
 interface PortfolioItem {
@@ -319,27 +320,27 @@ const LandingPage = () => {
   };
 
   return (
-    <div>
+    <div className={mobileMenuOpen ? 'max-h-screen overflow-hidden' : ''}>
       {/* Navigation */}
-      <nav className="bg-gradient-to-r from-red-500 to-yellow-500 fixed w-full top-0 z-10">
+      <nav className="bg-white fixed w-full top-0 z-10 shadow-lg">
         <div className="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative flex items-center justify-between h-16">
             <div className="flex-1 flex items-center justify-between sm:items-stretch">
               <div className="flex-shrink-0 flex items-center">
-                <span className="text-white text-lg font-semibold">
+                <span className="text-orange-500 text-lg font-semibold">
                   <a href="#hero">Hugo Bessa</a>
                 </span>
               </div>
               <div className="hidden sm:block sm:ml-6 float-right">
                 <div className="flex space-x-4">
                   {/* Add links to sections */}
-                  <a href="#work" className="text-white hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                  <a href="#work" className="text-orange-500 hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
                     Work
                   </a>
-                  <a href="#content" className="text-white hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                  <a href="#content" className="text-orange-500 hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
                     Content
                   </a>
-                  <a href="#contact" className="text-white hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                  <a href="#contact" className="text-orange-500 hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
                     Contact
                   </a>
                 </div>
@@ -349,7 +350,7 @@ const LandingPage = () => {
               <button
                 onClick={handleToggleMobileMenu}
                 type="button"
-                className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                className="inline-flex items-center justify-center p-2 rounded-md text-orange-500 hover:text-orange-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                 aria-controls="mobile-menu"
                 aria-expanded="false"
               >
@@ -365,19 +366,22 @@ const LandingPage = () => {
           <div className="sm:hidden" id="mobile-menu">
             <div className="flex flex-col justify-center min-h-screen text-center -mt-16">
               {/* Add links to sections */}
-              <a href="#skills" onClick={handleToggleMobileMenu} className="text-white hover:bg-gray-700 block px-3 py-6 rounded-md text-base font-medium text-2xl">
+              <a href="#skills" onClick={handleToggleMobileMenu} className="text-orange-500 hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl">
                 Skills
               </a>
-              <a href="#job-history" onClick={handleToggleMobileMenu} className="text-white hover:bg-gray-700 block px-3 py-6 rounded-md text-base font-medium text-2xl">
+              <a href="#job-history" onClick={handleToggleMobileMenu} className="text-orange-500 hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl">
                 Job History
               </a>
-              <a href="#education" onClick={handleToggleMobileMenu} className="text-white hover:bg-gray-700 block px-3 py-6 rounded-md text-base font-medium text-2xl">
+              <a href="#education" onClick={handleToggleMobileMenu} className="text-orange-500 hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl">
                 Education
               </a>
-              <a href="#content" onClick={handleToggleMobileMenu} className="text-white hover:bg-gray-700 block px-3 py-6 rounded-md text-base font-medium text-2xl">
+              <a href="#languages" onClick={handleToggleMobileMenu} className="text-orange-500 hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl">
+                Languages
+              </a>
+              <a href="#content" onClick={handleToggleMobileMenu} className="text-orange-500 hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl">
                 Content
               </a>
-              <a href="#contact" onClick={handleToggleMobileMenu} className="text-white hover:bg-gray-700 block px-3 py-6 rounded-md text-base font-medium text-2xl">
+              <a href="#contact" onClick={handleToggleMobileMenu} className="text-orange-500 hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl">
                 Contact
               </a>
             </div>
@@ -401,172 +405,174 @@ const LandingPage = () => {
       </section>
     
       {/* Work section */}
-      <section id="work" className="grid grid-cols-1 md:grid-cols-2 gap-4 container lg:w-2/3 mx-auto mt-16">
-        <div className="grid gap-4 auto-rows-min">
-          {/* Skills medium screen and larger section */}
-          <div id="skills" className="md:hidden block md:mx-0 mx-4 py-8 px-4 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800">
-            <div className="px-2">
-              <h2 className="text-3xl font-semibold mb-8">Skills</h2>
-              <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {skillsData.map((skill, index) => {
-                  const circumference = 30 * 2 * Math.PI;
-                  return (<div key={index}>
-                    <div className="w-20 h-20 mx-auto">
-                      {/* Add circular gauge for skill percentage */}
-                      <svg className="w-20 h-20">
-                        <circle
-                          className="text-gray-300"
-                          strokeWidth="5"
-                          stroke="currentColor"
-                          fill="transparent"
-                          r="30"
-                          cx="40"
-                          cy="40"
-                        />
-                        <circle
-                          className="text-blue-600"
-                          strokeWidth="5"
-                          stroke-dasharray={circumference}
-                          stroke-dashoffset={circumference - skill.percentage / 100 * circumference}
-                          stroke-linecap="round"
-                          stroke="currentColor"
-                          fill="transparent"
-                          r="30"
-                          cx="40"
-                          cy="40"
-                        />
-                      </svg>
-                    </div>
-                    <p className="mt-2 text-center">{skill.name}</p>
-                  </div>
-                )
-              })}
-              </div>
-            </div>
-          </div>
-
-          {/* Job history section */}
-          <div id="job-history" className="lg:col-span-2 md:mx-0 mx-4 py-8 px-4 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800">
-            <div className="px-2">
-              <h2 className="text-3xl font-semibold mb-8">Job History</h2>
-              <ol className="space-y-8 relative">
-                {jobsData.map((job, index) => (
-                  <li key={index} className="w-full mb-30 flex items-start relative after:absolute after:content-[' '] after:top-0 after:-bottom-8 after:left-10 after:border-l after:border-gray-200 after:-z-10 dark:after:border-gray-600 last:after:content-none">            
-                    <span className="flex items-center mr-4 justify-center w-20 h-20 bg-blue-100 rounded-full border-8 border-white dark:border-gray-900 dark:bg-blue-900">
-                      <img className="rounded-full shadow-lg" src={job.company.logo} alt={job.company.name}/>
-                    </span>
-                    <div className="p-4 bg-white rounded-lg grow shadow-sm dark:bg-gray-700">
-                      <time className="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0">{job.date}</time>
-                      <div className="text-sm font-normal text-gray-500 dark:text-gray-300">
-                        <a href={job.company.link} className="font-semibold text-blue-600 dark:text-blue-500 hover:underline">{job.company.name}</a> - {job.title}
+      <section id="work" className="md:py-16 py-8 bg-gray-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 container lg:w-2/3 mx-auto ">
+          <div className="grid gap-4 auto-rows-min">
+            {/* Skills medium screen and larger section */}
+            <div id="skills" className="md:hidden block md:mx-0 mx-4 py-8 px-4 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800">
+              <div className="px-2">
+                <h2 className="text-3xl font-semibold mb-8">Skills</h2>
+                <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {skillsData.map((skill, index) => {
+                    const circumference = 30 * 2 * Math.PI;
+                    return (<div key={index}>
+                      <div className="w-20 h-20 mx-auto">
+                        {/* Add circular gauge for skill percentage */}
+                        <svg className="w-20 h-20">
+                          <circle
+                            className="text-gray-300"
+                            strokeWidth="5"
+                            stroke="currentColor"
+                            fill="transparent"
+                            r="30"
+                            cx="40"
+                            cy="40"
+                          />
+                          <circle
+                            className="text-orange-500"
+                            strokeWidth="5"
+                            stroke-dasharray={circumference}
+                            stroke-dashoffset={circumference - skill.percentage / 100 * circumference}
+                            stroke-linecap="round"
+                            stroke="currentColor"
+                            fill="transparent"
+                            r="30"
+                            cx="40"
+                            cy="40"
+                          />
+                        </svg>
                       </div>
-                      {!openedJobHistoryItems[index] && (<button className="text-blue-500" onClick={() => handleOpenJobHistoryItem(index)}>
-                        See more
-                      </button>)}
-                      {/* Add course description toggle logic */}
-                      {openedJobHistoryItems[index] && (
-                        <p className="p-3 text-xs italic font-normal text-gray-500 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300">
-                          {job.description}
-                        </p>
-                      )}
-                      {openedJobHistoryItems[index] && (<button className="text-blue-500" onClick={() => handleCloseJobHistoryItem(index)}>
-                        close
-                      </button>)}
+                      <p className="mt-2 text-center">{skill.name}</p>
                     </div>
-                  </li>
-                ))}
-              </ol>
+                  )
+                })}
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Education section */}
-          <div id="education" className="lg:col-span-2 md:mx-0 mx-4 py-8 px-4 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800">
-            <div className="px-2">
-              <h2 className="text-3xl font-semibold mb-8">Education</h2>
-              <div className="space-y-8">
-                {educationData.map((education, index) => (
-                  <li key={index} className="w-full mb-30 flex items-start relative after:absolute after:content-[' '] after:top-0 after:-bottom-8 after:left-10 after:border-l after:border-gray-200 after:-z-10 dark:after:border-gray-600 last:after:content-none">            
-                    <span className="flex items-center mr-4 justify-center w-20 h-20 bg-blue-100 rounded-full border-8 border-white dark:border-gray-900 dark:bg-blue-900">
-                      <img className="rounded-full shadow-lg" src={education.institution.logo} alt={education.institution.name}/>
-                    </span>
-                    <div className="p-4 bg-white rounded-lg grow shadow-sm dark:bg-gray-700">
-                      <time className="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0">{education.date}</time>
-                      <div className="text-sm font-normal text-gray-500 dark:text-gray-300">
-                        <a href={education.institution.link} className="font-semibold text-blue-600 dark:text-blue-500 hover:underline">{education.institution.name}</a> - {education.course }
+            {/* Job history section */}
+            <div id="job-history" className="lg:col-span-2 md:mx-0 mx-4 py-8 px-4 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800">
+              <div className="px-2">
+                <h2 className="text-3xl font-semibold mb-8">Job History</h2>
+                <ol className="space-y-8 relative">
+                  {jobsData.map((job, index) => (
+                    <li key={index} className="w-full mb-30 flex items-start relative after:absolute after:content-[' '] after:top-0 after:-bottom-8 after:left-10 after:border-l after:border-gray-200 after:-z-10 dark:after:border-gray-600 last:after:content-none">            
+                      <span className="flex items-center mr-4 justify-center w-20 h-20 bg-orange-100 rounded-full border-8 border-white dark:border-gray-900 dark:bg-blue-900">
+                        <img className="rounded-full shadow-lg" src={job.company.logo} alt={job.company.name}/>
+                      </span>
+                      <div className="p-4 bg-white rounded-lg grow border border-gray-200 dark:bg-gray-700">
+                        <time className="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0">{job.date}</time>
+                        <div className="text-sm font-normal text-gray-500 dark:text-gray-300">
+                          <a href={job.company.link} className="font-semibold text-orange-600 dark:text-blue-500 hover:underline">{job.company.name}</a> - {job.title}
+                        </div>
+                        {!openedJobHistoryItems[index] && (<button className="text-blue-500" onClick={() => handleOpenJobHistoryItem(index)}>
+                          See more
+                        </button>)}
+                        {/* Add course description toggle logic */}
+                        {openedJobHistoryItems[index] && (
+                          <p className="p-3 text-xs italic font-normal text-gray-500 rounded-lg bg-gray-100 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300">
+                            {job.description}
+                          </p>
+                        )}
+                        {openedJobHistoryItems[index] && (<button className="text-blue-500" onClick={() => handleCloseJobHistoryItem(index)}>
+                          close
+                        </button>)}
                       </div>
-                      {!openedEducationHistoryItems[index] && (<button className="text-blue-500" onClick={() => handleOpenEducationItem(index)}>
-                        See more
-                      </button>)}
-                      {/* Add course description toggle logic */}
-                      {openedEducationHistoryItems[index] && (
-                        <p className="p-3 text-xs italic font-normal text-gray-500 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300">
-                          {education.description}
-                        </p>
-                      )}
-                      {openedEducationHistoryItems[index] && (<button className="text-blue-500" onClick={() => handleCloseEducationItem(index)}>
-                        close
-                      </button>)}
-                    </div>
-                  </li>
-                ))}
+                    </li>
+                  ))}
+                </ol>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="grid gap-4 auto-rows-min">
-          {/* Skills small screen and smaller section */}
-          <div id="skills" className="md:block hidden md:mx-0 mx-4 py-8 px-4 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800">
-            <div className="px-2">
-              <h2 className="text-3xl font-semibold mb-8">Skills</h2>
-              <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {skillsData.map((skill, index) => {
-                  const circumference = 30 * 2 * Math.PI;
-                  return (<div key={index}>
-                    <div className="w-20 h-20 mx-auto">
-                      {/* Add circular gauge for skill percentage */}
-                      <svg className="w-20 h-20">
-                        <circle
-                          className="text-gray-300"
-                          strokeWidth="5"
-                          stroke="currentColor"
-                          fill="transparent"
-                          r="30"
-                          cx="40"
-                          cy="40"
-                        />
-                        <circle
-                          className="text-blue-600"
-                          strokeWidth="5"
-                          stroke-dasharray={circumference}
-                          stroke-dashoffset={circumference - skill.percentage / 100 * circumference}
-                          stroke-linecap="round"
-                          stroke="currentColor"
-                          fill="transparent"
-                          r="30"
-                          cx="40"
-                          cy="40"
-                        />
-                      </svg>
-                    </div>
-                    <p className="mt-2 text-center">{skill.name}</p>
-                  </div>
-                )
-              })}
+            {/* Education section */}
+            <div id="education" className="lg:col-span-2 md:mx-0 mx-4 py-8 px-4 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800">
+              <div className="px-2">
+                <h2 className="text-3xl font-semibold mb-8">Education</h2>
+                <div className="space-y-8">
+                  {educationData.map((education, index) => (
+                    <li key={index} className="w-full mb-30 flex items-start relative after:absolute after:content-[' '] after:top-0 after:-bottom-8 after:left-10 after:border-l after:border-gray-200 after:-z-10 dark:after:border-gray-600 last:after:content-none">            
+                      <span className="flex items-center mr-4 justify-center w-20 h-20 bg-orange-100 rounded-full border-8 border-white dark:border-gray-900 dark:bg-blue-900">
+                        <img className="rounded-full shadow-lg" src={education.institution.logo} alt={education.institution.name}/>
+                      </span>
+                      <div className="p-4 bg-white rounded-lg grow border border-gray-200 dark:bg-gray-700">
+                        <time className="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0">{education.date}</time>
+                        <div className="text-sm font-normal text-gray-500 dark:text-gray-300">
+                          <a href={education.institution.link} className="font-semibold text-orange-600 dark:text-blue-500 hover:underline">{education.institution.name}</a> - {education.course }
+                        </div>
+                        {!openedEducationHistoryItems[index] && (<button className="text-blue-500" onClick={() => handleOpenEducationItem(index)}>
+                          See more
+                        </button>)}
+                        {/* Add course description toggle logic */}
+                        {openedEducationHistoryItems[index] && (
+                          <p className="p-3 text-xs italic font-normal text-gray-500 rounded-lg bg-gray-100 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300">
+                            {education.description}
+                          </p>
+                        )}
+                        {openedEducationHistoryItems[index] && (<button className="text-blue-500" onClick={() => handleCloseEducationItem(index)}>
+                          close
+                        </button>)}
+                      </div>
+                    </li>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Languages section */}
-          <div id="skills" className="md:mx-0 mx-4 py-8 px-4 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800">
-            <div className="px-2">
-              <h2 className="text-3xl font-semibold mb-8">Languages</h2>
-              <div className="">
-                {languagesData.map((language, index) => (<div key={index}>
-                    <p className="mt-2"><span className="font-bold">{language.name}</span> {language.level}</p>
-                  </div>
-                )
-              )}
+          <div className="grid gap-4 auto-rows-min">
+            {/* Skills small screen and smaller section */}
+            <div id="skills" className="md:block hidden md:mx-0 mx-4 py-8 px-4 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800">
+              <div className="px-2">
+                <h2 className="text-3xl font-semibold mb-8">Skills</h2>
+                <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {skillsData.map((skill, index) => {
+                    const circumference = 30 * 2 * Math.PI;
+                    return (<div key={index}>
+                      <div className="w-20 h-20 mx-auto">
+                        {/* Add circular gauge for skill percentage */}
+                        <svg className="w-20 h-20">
+                          <circle
+                            className="text-gray-300"
+                            strokeWidth="5"
+                            stroke="currentColor"
+                            fill="transparent"
+                            r="30"
+                            cx="40"
+                            cy="40"
+                          />
+                          <circle
+                            className="text-orange-600"
+                            strokeWidth="5"
+                            stroke-dasharray={circumference}
+                            stroke-dashoffset={circumference - skill.percentage / 100 * circumference}
+                            stroke-linecap="round"
+                            stroke="currentColor"
+                            fill="transparent"
+                            r="30"
+                            cx="40"
+                            cy="40"
+                          />
+                        </svg>
+                      </div>
+                      <p className="mt-2 text-center">{skill.name}</p>
+                    </div>
+                  )
+                })}
+                </div>
+              </div>
+            </div>
+
+            {/* Languages section */}
+            <div id="skills" className="md:mx-0 mx-4 py-8 px-4 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800">
+              <div className="px-2">
+                <h2 className="text-3xl font-semibold mb-8">Languages</h2>
+                <div className="">
+                  {languagesData.map((language, index) => (<div key={index}>
+                      <p className="mt-2"><span className="font-bold">{language.name}</span> {language.level}</p>
+                    </div>
+                  )
+                )}
+                </div>
               </div>
             </div>
           </div>
@@ -574,26 +580,27 @@ const LandingPage = () => {
       </section>
 
       {/* Content section */}
-      <section id="content" className="mt-16 py-12 bg-orange-200">
-        <div className="lg:w-2/3 md:mx-auto mx-4">
+      <section id="content" className="py-12 bg-orange-200 relative">
+        <div className="absolute w-full h-full opacity-5 top-0 bg-left-top" style={{backgroundImage: `url(${chevronPatternSvg.src})`, backgroundSize: '300px 300px'}} />
+        <div className="lg:w-2/3 md:mx-auto mx-4 relative z-1">
           <div className="container mx-auto px-2">
             <h2 className="text-3xl font-semibold mb-8 text-center">Content</h2>
             <div className="space-y-4 ">
-              <div className="flex justify-center gap-2 mb-4">
+              <div className="flex md:justify-center justify-left gap-2 mb-4 flex-wrap">
                 {/* Add search bar */}
                 <input
                   type="text"
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="w-full md:w-60 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Search..."
                 />
                 {/* Add tag filters */}
                 {tags.map((tag: string, index) => (
                   <button
                     key={index}
-                    className={`${
-                      selectedTags.includes(tag) ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
+                    className={`shadow-md ${
+                      selectedTags.includes(tag) ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-800'
                     } rounded-md px-4 py-2`}
                     onClick={() => handleTagClick(tag)}
                   >
@@ -603,7 +610,7 @@ const LandingPage = () => {
                 {/* Add clear filters button */}
                 {(searchText !== '' || selectedTags.length > 0) && (
                   <button
-                    className="text-blue-500 px-4 py-2"
+                    className="text-orange-500 px-4 py-2"
                     onClick={handleClearFilters}
                   >
                     Clear Filters
@@ -623,24 +630,30 @@ const LandingPage = () => {
       </section>
 
       {/* Contact section */}
-      <section id="contact" className="py-12 bg-gradient-to-r from-red-500 to-yellow-500 text-white">
+      <section id="contact">
+        <div className="bg-gradient-to-r from-red-500 to-yellow-500 text-white h-2 mb-12"></div>
         <div className="lg:w-2/3 md:mx-auto mx-4">
-          <h2 className="text-3xl font-semibold mb-8 text-center">Contact</h2>
+          <h2 className="text-3xl font-semibold mb-8 text-center">Send me a message</h2>
           <div className="md:flex">
-            <div className="p-10 md:w-1/2 w-full flex md:justify-auto justify-center">
-              <ul>
+            <div className="md:p-5 md:w-1/2 w-full flex md:justify-auto justify-center mb-12 ">
+              <ul className="md:block flex gap-4">
                 {contactInfoData.map((contact) => (
-                  <li className='flex items-center'>
+                  <li className='flex mb-3'>
                     {
                       contact.link ? (
                         <a 
                           href={contact.link} 
+                          className='inline-flex items-center'
                           target={!contact.link.startsWith("mailto:") ? 'blank' : undefined}
                         >
-                          <span className="inline-block"><DynamicBrandedIcon name={contact.icon} /> </span> {contact.text}
+                          <span className="md:inline-block text-orange-500 mr-2 p-1"><DynamicBrandedIcon name={contact.icon} /> </span> 
+                          <span className='md:inline hidden'>{contact.text}</span>
                         </a> 
                       ): (
-                        <span><span className="inline-block"><DynamicBrandedIcon  name={contact.icon} /></span> {contact.text}</span>
+                        <span className='inline-flex items-center'>
+                          <span className="md:inline-block text-orange-500 mr-2 p-1"><DynamicBrandedIcon name={contact.icon} /></span> 
+                          <span className='md:inline hidden'>{contact.text}</span>
+                        </span>
                       )
                     }
                     
@@ -650,46 +663,46 @@ const LandingPage = () => {
             </div>
             <div className="px-2 md:w-1/2 w-full">
               
-              <form onSubmit={handleFormSubmit} className="space-y-4">
+              <form onSubmit={handleFormSubmit} className="space-y-4 md:block flex flex-col mb-6">
                 <div>
-                  <label htmlFor="name" className="block mb-2 text-sm font-medium text-white dark:text-white">From Name</label>
+                  <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">From Name</label>
                   <input
                     type="text"
                     id="name"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block mb-2 text-sm font-medium text-white dark:text-white">From Email</label>
+                  <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">From Email</label>
                   <input
                     type="email"
                     id="email"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="subject" className="block mb-2 text-sm font-medium text-white dark:text-white">Subject</label>
+                  <label htmlFor="subject" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subject</label>
                   <input
                     type="text"
                     id="subject"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="body" className="block mb-2 text-sm font-medium text-white dark:text-white">Body</label>
+                  <label htmlFor="body" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Body</label>
                   <textarea
                     id="body"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     rows={4}
                     required
                   ></textarea>
                 </div>
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+                  className="bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600"
                 >
                   Send Message
                 </button>
