@@ -568,7 +568,7 @@ const LandingPage = () => {
                 <h2 className="text-3xl font-semibold mb-8">Languages</h2>
                 <div className="">
                   {languagesData.map((language, index) => (<div key={index}>
-                      <p className="mt-2"><span className="font-bold">{language.name}</span> {language.level}</p>
+                      <p className="mt-2"><span className="font-semibold text-orange-500">{language.name}</span> {language.level}</p>
                     </div>
                   )
                 )}
