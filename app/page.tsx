@@ -55,9 +55,9 @@ const getNotionData = async (): Promise<Props> => {
   ]);
 
   jobsData.sort((a, b) => {
-    const dateA = parse(a.date.split('-')[0].trim(), 'LLL y', 0);
-    const dateB = parse(b.date.split('-')[0].trim(), 'LLL y', 0);
-    if (dateA > dateB) {
+    const dateA = a.date ? parse(a.date.split('-')[0].trim(), 'LLL y', 0) : null;
+    const dateB = b.date ? parse(b.date.split('-')[0].trim(), 'LLL y', 0) : null;
+    if (dateA && dateB && dateA > dateB) {
       return -1
     }
     if (dateA === dateB) {
@@ -67,9 +67,9 @@ const getNotionData = async (): Promise<Props> => {
   })
 
   educationHistoryData.sort((a, b) => {
-    const dateA = parse(a.date.split('-')[0].trim(), 'MMM y', 0);
-    const dateB = parse(b.date.split('-')[0].trim(), 'MMM y', 0);
-    if (dateA > dateB) {
+    const dateA = a.date ? parse(a.date.split('-')[0].trim(), 'LLL y', 0) : null;
+    const dateB = b.date ? parse(b.date.split('-')[0].trim(), 'LLL y', 0) : null;
+    if (dateA && dateB && dateA > dateB) {
       return -1
     }
     if (dateA === dateB) {
@@ -77,6 +77,22 @@ const getNotionData = async (): Promise<Props> => {
     }
     return 1
   })
+
+  languagesData.sort((a, b) => {
+    return a.order - b.order;
+  });
+
+  skillsData.sort((a, b) => {
+    return b.percentage - a.percentage;
+  });
+
+  const tags = [
+    ...Array.from(
+      new Set(portfolioData?.map((item: PortfolioItem) => item.tags).flat())
+    ),
+  ];
+  tags.sort();
+
   return {
     organizationsDataHash: organizationsData?.reduce<{
       [key: string]: Organization;
@@ -93,11 +109,7 @@ const getNotionData = async (): Promise<Props> => {
     languagesData,
     portfolioData,
     contactInfoData,
-    tags: [
-      ...Array.from(
-        new Set(portfolioData?.map((item: PortfolioItem) => item.tags).flat())
-      ),
-    ],
+    tags,
   };
 }
 
@@ -138,18 +150,17 @@ const LandingPage = async () => {
       >
         <div className="container mx-auto md:w-2/3 px-2 md:max-h-800 pt-28">
           <div className="flex items-center justify-between flex-wrap">
-            <div className="w-full md:w-1/2 md:order-last">
-              <h1 className="text-5xl pl-4 text-center md:text-start">
+            <div className="w-full lg:w-1/2 lg:order-last">
+              <h1 className="text-5xl pl-4 text-center lg:text-start">
                 Hi, I&apos;m <span className="font-bold">Hugo&nbsp;Bessa</span>
               </h1>
-              <p className="text-2xl pl-4 mt-4 text-center md:text-start">
+              <p className="text-2xl pl-4 mt-4 text-center lg:text-start">
                 Expert in building MVPs and scaling&nbsp;them. <br />
                 Amateur composer/producer in the free&nbsp;time
               </p>
             </div>
-            <div className="w-full md:w-1/2 md:order-first">
+            <div className="w-full lg:w-1/2 lg:order-first text-center lg:text-start">
               <Image
-                className="md:float-right md:mr-20"
                 src="/imgs/my-pic.png"
                 width={400}
                 height={600}
@@ -176,8 +187,9 @@ const LandingPage = async () => {
                     const circumference = 30 * 2 * Math.PI;
                     return (
                       <div key={skill.id}>
-                        <div className="w-20 h-20 mx-auto">
+                        <div className="relative w-20 h-20 mx-auto">
                           {/* Add circular gauge for skill percentage */}
+                          <div className="absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%]"> {skill.percentage}% </div>
                           <svg className="w-20 h-20">
                             <circle
                               className="text-gray-300"
@@ -192,11 +204,11 @@ const LandingPage = async () => {
                               className="text-orange-500"
                               strokeWidth="5"
                               strokeDasharray={circumference}
-                              stroke-dashoffset={
+                              strokeDashoffset={
                                 circumference -
                                 (skill.percentage / 100) * circumference
                               }
-                              stroke-linecap="round"
+                              strokeLinecap="round"
                               stroke="currentColor"
                               fill="transparent"
                               r="30"
@@ -232,8 +244,9 @@ const LandingPage = async () => {
                     const circumference = 30 * 2 * Math.PI;
                     return (
                       <div key={skill.id}>
-                        <div className="w-20 h-20 mx-auto">
+                        <div className="relative w-20 h-20 mx-auto">
                           {/* Add circular gauge for skill percentage */}
+                          <div className="absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%]"> {skill.percentage}% </div>
                           <svg className="w-20 h-20">
                             <circle
                               className="text-gray-300"
@@ -248,11 +261,11 @@ const LandingPage = async () => {
                               className="text-orange-600"
                               strokeWidth="5"
                               strokeDasharray={circumference}
-                              stroke-dashoffset={
+                              strokeDashoffset={
                                 circumference -
                                 (skill.percentage / 100) * circumference
                               }
-                              stroke-linecap="round"
+                              strokeLinecap="round"
                               stroke="currentColor"
                               fill="transparent"
                               r="30"
@@ -261,7 +274,7 @@ const LandingPage = async () => {
                             />
                           </svg>
                         </div>
-                        <p className="mt-2 text-center">{skill.name}</p>
+                        <p className="mb-2 text-center">{skill.name}</p>
                       </div>
                     );
                   })}
@@ -297,10 +310,11 @@ const LandingPage = async () => {
       {/* Content section */}
       <section id="content" className="py-12 bg-orange-200 relative">
         <div
-          className="absolute w-full h-full opacity-5 top-0 bg-left-top"
+          className="absolute w-full h-full opacity-70 top-0 bg-left-top"
           style={{
-            backgroundImage: `url("/imgs/chevron-pattern.svg")`,
-            backgroundSize: "300px 300px",
+            backgroundImage: `url("/imgs/portfolio-bg.jpg")`,
+            backgroundSize: 'contain',
+            filter: `blur(30px)`,
           }}
         />
         <Portfolio portfolioData={portfolioData} tags={tags} />

@@ -5,18 +5,18 @@ import Image from "next/image";
 import { useState } from "react";
 
 const ContentCardWrapper = ({
-  isLink,
+  link,
   children,
   className,
   ...props
 }: {
-  isLink: boolean;
+  link?: string;
   children: React.ReactNode;
   className: string;
 }) => {
-  if (isLink) {
+  if (!!link) {
     return (
-      <a className={`block ${className}`} {...props}>
+      <a className={`block ${className}`} href={link} target="_blank" rel="noreferrer" {...props}>
         {children}
       </a>
     );
@@ -31,7 +31,7 @@ const ContentCardWrapper = ({
 
 const ContentCard = ({ item, onTagClick }: { item: PortfolioItem, onTagClick: (tag: string) => void }) => (
   <ContentCardWrapper
-    isLink={!!item.link}
+    link={item.link}
     className="self-start rounded overflow-hidden shadow-lg dark:bg-gray-800 mb-4 last:mb-0 bg-white"
   >
     {item.image && (

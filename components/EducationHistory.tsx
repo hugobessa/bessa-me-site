@@ -3,6 +3,7 @@
 import { Education, Organization } from "@/app/notion-data";
 import Image from "next/image";
 import { useState } from "react";
+import { NotionRichText } from "./NotionRichText";
 
 export const EducationHistory = ({ educationHistoryData, organizationsDataHash }: { educationHistoryData: Education[], organizationsDataHash: { [key: string]: Organization } }) => {
   const [openedEducationHistoryItems, setOpenedEducationHistoryItems] =
@@ -36,8 +37,9 @@ export const EducationHistory = ({ educationHistoryData, organizationsDataHash }
               key={education.id}
               className="w-full mb-30 flex items-start relative after:absolute after:content-[' '] after:top-0 after:-bottom-8 after:left-10 after:border-l after:border-gray-200 after:-z-10 dark:after:border-gray-600 last:after:content-none"
             >
-              <span className="flex items-center mr-4 justify-center w-20 min-w-[5rem] h-20 bg-white rounded-full border-8 border-white dark:border-gray-900 dark:bg-blue-900">
+              <span className="flex items-center mr-4 justify-center w-20 min-w-[5rem] h-20 bg-white border-8 border-white dark:border-gray-900 dark:bg-blue-900">
                 <Image
+                  className="rounded"
                   width={64}
                   height={64}
                   src={
@@ -78,7 +80,7 @@ export const EducationHistory = ({ educationHistoryData, organizationsDataHash }
                 {/* Add course description toggle logic */}
                 {openedEducationHistoryItems[index] && (
                   <p className="p-3 text-xs italic font-normal text-gray-500 rounded-lg bg-gray-100 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300">
-                    {education.description}
+                    <NotionRichText richText={education.description} />
                   </p>
                 )}
                 {openedEducationHistoryItems[index] && (
