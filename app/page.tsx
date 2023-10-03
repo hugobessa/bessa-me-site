@@ -33,6 +33,7 @@ interface Props {
   portfolioData: PortfolioItem[];
   contactInfoData: ContactInfo[];
   tags: string[];
+  RECAPTCHA_SITE_KEY: string;
 }
 
 const getNotionData = async (): Promise<Props> => {
@@ -93,6 +94,7 @@ const getNotionData = async (): Promise<Props> => {
   ];
   tags.sort();
 
+  console.log(process.env.RECAPTCHA_SITE_KEY)
   return {
     organizationsDataHash: organizationsData?.reduce<{
       [key: string]: Organization;
@@ -110,6 +112,7 @@ const getNotionData = async (): Promise<Props> => {
     portfolioData,
     contactInfoData,
     tags,
+    RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY as string,
   };
 }
 
@@ -139,6 +142,7 @@ const LandingPage = async () => {
     portfolioData,
     contactInfoData,
     tags,
+    RECAPTCHA_SITE_KEY,
   } = await getNotionData();
 
   return (
@@ -360,7 +364,7 @@ const LandingPage = async () => {
               </ul>
             </div>
             <div className="px-2 md:w-1/2 w-full">
-              <ContactForm />
+              <ContactForm RECAPTCHA_SITE_KEY={RECAPTCHA_SITE_KEY} />
             </div>
           </div>
         </div>
