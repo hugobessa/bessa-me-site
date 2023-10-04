@@ -72,6 +72,24 @@ export interface NotionRichTextItemType {
   };
 }
 
+async function imageUrlToBase64(url: string) {
+  try {
+    const response = await fetch(url);
+
+    const blob = await response.arrayBuffer();
+
+    const contentType = response.headers.get('content-type');
+
+    const base64String = `data:${contentType};base64,${Buffer.from(
+      blob,
+    ).toString('base64')}`;
+
+    return base64String;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 async function _fetchNotionData(databaseId: string): Promise<any[]> {
   const baseUrl = "https://api.notion.com/v1/databases";
   const url = `${baseUrl}/${databaseId}/query`;
@@ -175,15 +193,15 @@ export async function fetchOrganizations(): Promise<Organization[]> {
     process.env.NOTION_ORGANIZATIONS_DB_ID as string
   );
   // console.log("Notion Orgs:", JSON.stringify(notionOrganizations.map((i) => i.properties), null, 2));
-  return notionOrganizations.map(
-    ({ id, properties: notionOrganization }) =>
+  return await Promise.all(notionOrganizations.map(
+    async ({ id, properties: notionOrganization }) =>
       ({
         id: id,
         name: notionOrganization["Name"].title[0].text.content,
         link: notionOrganization["Link"].url,
-        logo: notionOrganization["Logo"].files[0].file.url,
+        logo: await imageUrlToBase64(notionOrganization["Logo"].files[0].file.url),
       } as Organization)
-  );
+  ));
 }
 
 export async function fetchJobHistory(): Promise<Job[]> {

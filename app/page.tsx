@@ -163,14 +163,14 @@ const LandingPage = async () => {
               </h1>
               <p className="text-2xl pl-4 mt-4 text-center lg:text-start">
                 Expert in building MVPs and scaling&nbsp;them. <br />
-                Amateur composer/producer in the free&nbsp;time
+                Amateur composer/producer in the free&nbsp;time.
               </p>
             </div>
             <div className="w-full lg:w-1/2 lg:order-first text-center lg:text-start">
               <Image
                 src="/imgs/my-pic.png"
                 width={400}
-                height={600}
+                height={386}
                 alt="Man"
               />
             </div>
