@@ -1,5 +1,4 @@
 import Server from 'next/server';
-import { RecaptchaV2 } from 'express-recaptcha';
 import sgMail from '@sendgrid/mail';
 
 type ContactFormData = {
@@ -33,28 +32,31 @@ async function sendEmail({ name, email, subject, body }: ContactFormData) {
   }
 }
 
+async function verifyCaptcha(captchaResponse: string) {
+  console.log("Will verify captcha");
+  const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY as string;
+  const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${captchaResponse}`, {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+    },
+    method: 'POST',
+  });
+  const data = await response.json();
+  if (!data.success) {
+    console.log("Captcha verification failed");
+    return false;
+  } 
+  console.log("Captcha verification succeeded");
+  return true
+}
+
 export async function POST(req: Request) {
   console.log("Will try to send email");
   const contactFormData: ContactFormData = await req.json();
 
   console.log("Data to send email received", contactFormData);
-
-  const recaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY as string;
-  const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY as string;
-
-  if (process.env.NODE_ENV === "production") {
-    // Verify the captcha
-    console.log("Will validate Captcha");
-    const recaptchaClient = new RecaptchaV2(recaptchaSiteKey, recaptchaSecretKey);
-    recaptchaClient.verify(contactFormData.captchaResponse, async (error) => {
-      if (error) {
-        console.error('Captcha verification failed', error);
-        return Server.NextResponse.json({ message: 'Captcha verification failed.' }, {status: 400});
-      }
-      console.log("Captcha validated, will send email");
-      return await sendEmail(contactFormData);
-    });
-  } else {
-    return await sendEmail(contactFormData);
+  if (process.env.NODE_ENV === "production" && !await verifyCaptcha(contactFormData.captchaResponse)) {
+    return Server.NextResponse.json({ message: 'Captcha is invalid.' }, {status: 400});
   }
+  return await sendEmail(contactFormData);
 };
