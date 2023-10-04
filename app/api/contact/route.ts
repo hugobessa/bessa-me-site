@@ -1,5 +1,5 @@
 import Server from 'next/server';
-import { RecaptchaV3 } from 'express-recaptcha';
+import { RecaptchaV2 } from 'express-recaptcha';
 import sgMail from '@sendgrid/mail';
 
 type ContactFormData = {
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
 
   if (process.env.NODE_ENV === "production") {
     // Verify the captcha
-    const recaptchaClient = new RecaptchaV3(recaptchaSiteKey, recaptchaSecretKey);
+    const recaptchaClient = new RecaptchaV2(recaptchaSiteKey, recaptchaSecretKey);
     recaptchaClient.verify(contactFormData.captchaResponse, async (error) => {
       if (error) {
         return Server.NextResponse.json({ message: 'Captcha verification failed.' }, {status: 400});
