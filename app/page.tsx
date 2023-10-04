@@ -153,9 +153,9 @@ const LandingPage = async () => {
       {/* Hero section */}
       <section
         id="hero"
-        className="bg-gradient-to-r from-red-500 to-yellow-500 text-white"
+        className="bg-gradient-to-r from-red-500 to-yellow-500 text-white dark:text-gray-800"
       >
-        <div className="container mx-auto md:w-2/3 px-2 md:max-h-800 pt-28 text-gray-800">
+        <div className="container mx-auto md:w-2/3 px-2 md:max-h-800 pt-28">
           <div className="flex items-center justify-between flex-wrap">
             <div className="w-full lg:w-1/2 lg:order-last">
               <h1 className="text-5xl pl-4 text-center lg:text-start">
