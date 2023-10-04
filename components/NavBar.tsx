@@ -12,7 +12,7 @@ export const NavBar = ({ children }: {children: React.ReactNode}) => {
   return (
     <div className={mobileMenuOpen ? "max-h-screen overflow-hidden" : ""}>
       {/* Navigation */}
-      <nav className={`bg-white/70 backdrop-blur-lg dark:bg-gray-900 fixed rounded top-3 left-3 right-3 ${mobileMenuOpen && "bottom-3"} z-10 shadow-lg px-3`}>
+      <nav className={`bg-white/70 backdrop-blur-lg dark:bg-gray-900 fixed rounded top-3 left-3 right-3 ${mobileMenuOpen && "bottom-3"} z-10 shadow-lg dark:shadow-[0_0_5px_1px_rgba(249,115,22,1)] px-3`}>
         <div className="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative flex items-center justify-between h-16">
             <div className="flex-1 flex items-center justify-between sm:items-stretch">
