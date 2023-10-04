@@ -13,7 +13,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
   const recaptchaClient = new RecaptchaV3(recaptchaSiteKey, recaptchaSecretKey);
   recaptchaClient.verify(captchaResponse, async (error) => {
     if (error) {
-      return res.status(400).json({ message: 'Captcha verification failed.' });
+      return Response.json({ message: 'Captcha verification failed.' }, {status: 400});
     }
 
     try {
@@ -31,10 +31,10 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
       // Send the email using SendGrid
       await sgMail.send(emailData);
 
-      return res.status(200).json({ message: 'Message sent successfully.' });
+      return Response.json({ message: 'Message sent successfully.' });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Internal server error.' });
+      return Response.json({ message: 'Internal server error.' }, {status: 500});
     }
   });
 };
