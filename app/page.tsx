@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import * as BrandIcons from "react-icons/fa";
 import {
   ContactInfo,
   Education,
@@ -23,6 +22,7 @@ import { EducationHistory } from "@/components/EducationHistory";
 import { Portfolio } from "@/components/Portfolio";
 import { ContactForm } from "@/components/ContactForm";
 import { parse } from "date-fns";
+import { DynamicBrandedIcon } from "@/components/DynamicBrandedIcon";
 
 interface Props {
   organizationsDataHash: { [key: string]: Organization };
@@ -95,7 +95,6 @@ const getNotionData = async (): Promise<Props> => {
   ];
   tags.sort();
 
-  console.log(process.env.RECAPTCHA_SITE_KEY)
   return {
     organizationsDataHash: organizationsData?.reduce<{
       [key: string]: Organization;
@@ -117,22 +116,6 @@ const getNotionData = async (): Promise<Props> => {
     NODE_ENV: process.env.NODE_ENV as string,
   };
 }
-
-const DynamicBrandedIcon = ({
-  name,
-  ...props
-}: {
-  name: keyof typeof BrandIcons;
-}) => {
-  const IconComponent = BrandIcons[name];
-
-  if (!IconComponent) {
-    // Return a default one
-    return <BrandIcons.FaBeer {...props} />;
-  }
-
-  return <IconComponent {...props} />;
-};
 
 const LandingPage = async () => {
   const {

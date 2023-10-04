@@ -92,7 +92,6 @@ const NotionRichTextItem = ({
 };
 
 export const NotionRichText = ({ richText }: Props) => {
-  console.log(richText);
   return (
     <>
       {richText && richText?.map((item) => (

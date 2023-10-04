@@ -47,8 +47,6 @@ export const ContactForm = ({
   const handleFormChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    console.log(e.target.name)
-    console.log(e.target.value)
     setForm({
       ...form,
       [e.target.name]: e.target.value,

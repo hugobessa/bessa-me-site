@@ -1,5 +1,5 @@
 // pages/notion-data.js
-import type * as BrandIcons from "react-icons/fa";
+import type * as BrandIcons from "react-icons/fa6";
 
 export type ValueType<T> = T extends Promise<infer U> ? U : T;
 
