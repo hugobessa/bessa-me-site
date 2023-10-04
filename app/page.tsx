@@ -34,6 +34,7 @@ interface Props {
   contactInfoData: ContactInfo[];
   tags: string[];
   RECAPTCHA_SITE_KEY: string;
+  NODE_ENV: string;
 }
 
 const getNotionData = async (): Promise<Props> => {
@@ -113,6 +114,7 @@ const getNotionData = async (): Promise<Props> => {
     contactInfoData,
     tags,
     RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY as string,
+    NODE_ENV: process.env.NODE_ENV as string,
   };
 }
 
@@ -143,6 +145,7 @@ const LandingPage = async () => {
     contactInfoData,
     tags,
     RECAPTCHA_SITE_KEY,
+    NODE_ENV,
   } = await getNotionData();
 
   return (
@@ -325,7 +328,7 @@ const LandingPage = async () => {
       </section>
 
       {/* Contact section */}
-      <section id="contact">
+      <section id="contact" className="mb-20">
         <div className="bg-gradient-to-r from-red-500 to-yellow-500 text-white h-2 mb-12"></div>
         <div className="lg:w-2/3 md:mx-auto mx-4">
           <h2 className="text-3xl font-semibold mb-8 text-center">
@@ -364,7 +367,7 @@ const LandingPage = async () => {
               </ul>
             </div>
             <div className="px-2 md:w-1/2 w-full">
-              <ContactForm RECAPTCHA_SITE_KEY={RECAPTCHA_SITE_KEY} />
+              <ContactForm NODE_ENV={NODE_ENV} RECAPTCHA_SITE_KEY={RECAPTCHA_SITE_KEY} />
             </div>
           </div>
         </div>

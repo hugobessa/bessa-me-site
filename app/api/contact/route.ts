@@ -38,8 +38,8 @@ export async function POST(req: Request) {
   const recaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY as string;
   const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY as string;
 
-  // Verify the captcha
   if (process.env.NODE_ENV === "production") {
+    // Verify the captcha
     const recaptchaClient = new RecaptchaV3(recaptchaSiteKey, recaptchaSecretKey);
     recaptchaClient.verify(contactFormData.captchaResponse, async (error) => {
       if (error) {
