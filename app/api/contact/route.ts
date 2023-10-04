@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import Server from 'next/server';
 import { RecaptchaV3 } from 'express-recaptcha';
 import sgMail from '@sendgrid/mail';
 
@@ -25,10 +25,10 @@ async function sendEmail({ name, email, subject, body }: ContactFormData) {
   
     // Send the email using SendGrid
     await sgMail.send(emailData);
-    return Response.json({ message: 'Message sent successfully.' });
+    return Server.NextResponse.json({ message: 'Message sent successfully.' });
   } catch (error) {
     console.error(error);
-    return Response.json({ message: 'Internal server error.' }, {status: 500});
+    return Server.NextResponse.json({ message: 'Internal server error.' }, {status: 500});
   }
 }
 
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
     const recaptchaClient = new RecaptchaV3(recaptchaSiteKey, recaptchaSecretKey);
     recaptchaClient.verify(contactFormData.captchaResponse, async (error) => {
       if (error) {
-        return Response.json({ message: 'Captcha verification failed.' }, {status: 400});
+        return Server.NextResponse.json({ message: 'Captcha verification failed.' }, {status: 400});
       }
       return await sendEmail(contactFormData);
     });
