@@ -12,7 +12,7 @@ export const NavBar = ({ children }: {children: React.ReactNode}) => {
   return (
     <div className={mobileMenuOpen ? "max-h-screen overflow-hidden" : ""}>
       {/* Navigation */}
-      <nav className="bg-white dark:bg-gray-900 fixed w-full top-0 z-10 shadow-lg">
+      <nav className={`bg-white/70 backdrop-blur-lg dark:bg-gray-900 fixed rounded top-3 left-3 right-3 ${mobileMenuOpen && "bottom-3"} z-10 shadow-lg px-3`}>
         <div className="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative flex items-center justify-between h-16">
             <div className="flex-1 flex items-center justify-between sm:items-stretch">
@@ -49,7 +49,7 @@ export const NavBar = ({ children }: {children: React.ReactNode}) => {
               <button
                 onClick={handleToggleMobileMenu}
                 type="button"
-                className="inline-flex items-center justify-center p-2 rounded-md text-orange-500 hover:text-orange-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                className="inline-flex items-center justify-center p-2 rounded-md text-orange-500 hover:text-orange-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 focus:ring-white"
                 aria-controls="mobile-menu"
                 aria-expanded="false"
               >
@@ -72,42 +72,42 @@ export const NavBar = ({ children }: {children: React.ReactNode}) => {
               <a
                 href="#skills"
                 onClick={handleToggleMobileMenu}
-                className="text-orange-500 hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
+                className="text-orange-500 hover:bg-white/50 dark:hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
               >
                 Skills
               </a>
               <a
                 href="#job-history"
                 onClick={handleToggleMobileMenu}
-                className="text-orange-500 hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
+                className="text-orange-500 hover:bg-white/50 dark:hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
               >
                 Job History
               </a>
               <a
                 href="#education"
                 onClick={handleToggleMobileMenu}
-                className="text-orange-500 hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
+                className="text-orange-500 hover:bg-white/50 dark:hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
               >
                 Education
               </a>
               <a
                 href="#languages"
                 onClick={handleToggleMobileMenu}
-                className="text-orange-500 hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
+                className="text-orange-500 hover:bg-white/50 dark:hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
               >
                 Languages
               </a>
               <a
                 href="#content"
                 onClick={handleToggleMobileMenu}
-                className="text-orange-500 hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
+                className="text-orange-500 hover:bg-white/50 dark:hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
               >
                 Content
               </a>
               <a
                 href="#contact"
                 onClick={handleToggleMobileMenu}
-                className="text-orange-500 hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
+                className="text-orange-500 hover:bg-white/50 dark:hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
               >
                 Contact
               </a>
