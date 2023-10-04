@@ -12,7 +12,7 @@ export const NavBar = ({ children }: {children: React.ReactNode}) => {
   return (
     <div className={mobileMenuOpen ? "max-h-screen overflow-hidden" : ""}>
       {/* Navigation */}
-      <nav className="bg-white fixed w-full top-0 z-10 shadow-lg">
+      <nav className="bg-white dark:bg-gray-900 fixed w-full top-0 z-10 shadow-lg">
         <div className="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative flex items-center justify-between h-16">
             <div className="flex-1 flex items-center justify-between sm:items-stretch">
@@ -26,19 +26,19 @@ export const NavBar = ({ children }: {children: React.ReactNode}) => {
                   {/* Add links to sections */}
                   <a
                     href="#work"
-                    className="text-orange-500 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium"
+                    className="text-orange-500 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Work
                   </a>
                   <a
                     href="#content"
-                    className="text-orange-500 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium"
+                    className="text-orange-500 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Content
                   </a>
                   <a
                     href="#contact"
-                    className="text-orange-500 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium"
+                    className="text-orange-500 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Contact
                   </a>

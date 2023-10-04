@@ -39,9 +39,9 @@ export const JobsHistory = ({ jobsData, organizationsDataHash }: { jobsData: Job
               key={job.id}
               className="w-full mb-30 flex items-start relative after:absolute after:content-[' '] after:top-0 after:-bottom-8 after:left-10 after:border-l after:border-gray-200 after:-z-10 dark:after:border-gray-600 last:after:content-none"
             >
-              <span className="flex rounded items-center mr-4 justify-center w-20 min-w-[5rem] h-20 bg-white border-8 border-white dark:border-gray-900 dark:bg-blue-900">
+              <span className="flex rounded items-center mr-4 justify-center w-20 min-w-[5rem] h-20 bg-white border-8 border-white dark:border-gray-900 dark:bg-gray-900">
                 <Image
-                  className="rounded"
+                  className="rounded bg-white"
                   width={64}
                   height={64}
                   src={organizationsDataHash[job.organizationId].logo}

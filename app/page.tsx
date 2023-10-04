@@ -155,7 +155,7 @@ const LandingPage = async () => {
         id="hero"
         className="bg-gradient-to-r from-red-500 to-yellow-500 text-white"
       >
-        <div className="container mx-auto md:w-2/3 px-2 md:max-h-800 pt-28">
+        <div className="container mx-auto md:w-2/3 px-2 md:max-h-800 pt-28 text-gray-800">
           <div className="flex items-center justify-between flex-wrap">
             <div className="w-full lg:w-1/2 lg:order-last">
               <h1 className="text-5xl pl-4 text-center lg:text-start">
@@ -179,7 +179,7 @@ const LandingPage = async () => {
       </section>
 
       {/* Work section */}
-      <section id="work" className="md:py-16 py-8 bg-gray-200">
+      <section id="work" className="md:py-16 py-8 bg-gray-200 dark:bg-gray-900">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 container lg:w-2/3 mx-auto ">
           <div className="grid gap-4 auto-rows-min">
             {/* Skills medium screen and larger section */}
@@ -315,9 +315,9 @@ const LandingPage = async () => {
       </section>
 
       {/* Content section */}
-      <section id="content" className="py-12 bg-orange-200 relative">
+      <section id="content" className="py-12 bg-orange-200 dark:bg-black relative">
         <div
-          className="absolute w-full h-full opacity-70 top-0 bg-left-top"
+          className="absolute w-full h-full opacity-70 dark:opacity-25 top-0 bg-left-top"
           style={{
             backgroundImage: `url("/imgs/portfolio-bg.jpg")`,
             backgroundSize: 'contain',
@@ -328,7 +328,7 @@ const LandingPage = async () => {
       </section>
 
       {/* Contact section */}
-      <section id="contact" className="mb-20">
+      <section id="contact" className="pb-20 dark:bg-gray-900">
         <div className="bg-gradient-to-r from-red-500 to-yellow-500 text-white h-2 mb-12"></div>
         <div className="lg:w-2/3 md:mx-auto mx-4">
           <h2 className="text-3xl font-semibold mb-8 text-center">

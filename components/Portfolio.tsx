@@ -57,7 +57,7 @@ const ContentCard = ({ item, onTagClick }: { item: PortfolioItem, onTagClick: (t
         <button
           key={tag}
           onClick={() => onTagClick(tag)}
-          className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 dark:bg-gray-700 dark:text-white mr-2 mb-2"
         >
           {tag}
         </button>
@@ -118,7 +118,7 @@ export const Portfolio = ({ portfolioData, tags }: { portfolioData: PortfolioIte
                 className={`shadow-md ${
                   selectedTags.includes(tag)
                     ? "bg-orange-500 text-white"
-                    : "bg-gray-100 text-gray-800"
+                    : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-white"
                 } rounded-md px-4 py-2`}
                 onClick={() => handleTagClick(tag)}
               >
