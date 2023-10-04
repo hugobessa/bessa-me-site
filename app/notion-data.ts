@@ -117,6 +117,9 @@ async function _fetchNotionData(databaseId: string): Promise<any[]> {
       method: "POST",
       headers: headers,
       body: JSON.stringify(params),
+      next: {
+        revalidate: 1800,
+      },
     });
 
     if (!response.ok) {
