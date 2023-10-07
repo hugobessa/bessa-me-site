@@ -24,7 +24,7 @@ async function sendEmail({ name, email, subject, body }: ContactFormData) {
   
     // Send the email using SendGrid
     await sgMail.send(emailData);
-    console.log("Email sent");
+    // console.log("Email sent");
     return Server.NextResponse.json({ message: 'Message sent successfully.' });
   } catch (error) {
     console.error(error);
@@ -33,7 +33,7 @@ async function sendEmail({ name, email, subject, body }: ContactFormData) {
 }
 
 async function verifyCaptcha(captchaResponse: string) {
-  console.log("Will verify captcha");
+  // console.log("Will verify captcha");
   const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY as string;
   const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${captchaResponse}`, {
     headers: {
@@ -43,18 +43,18 @@ async function verifyCaptcha(captchaResponse: string) {
   });
   const data = await response.json();
   if (!data.success) {
-    console.log("Captcha verification failed");
+    // console.log("Captcha verification failed");
     return false;
   } 
-  console.log("Captcha verification succeeded");
+  // console.log("Captcha verification succeeded");
   return true
 }
 
 export async function POST(req: Request) {
-  console.log("Will try to send email");
+  // console.log("Will try to send email");
   const contactFormData: ContactFormData = await req.json();
 
-  console.log("Data to send email received", contactFormData);
+  // console.log("Data to send email received", contactFormData);
   if (process.env.NODE_ENV === "production" && !await verifyCaptcha(contactFormData.captchaResponse)) {
     return Server.NextResponse.json({ message: 'Captcha is invalid.' }, {status: 400});
   }

@@ -12,7 +12,7 @@ const Link = ({
   children: React.ReactNode;
 } & React.LinkHTMLAttributes<HTMLAnchorElement>) => {
   return (
-    <a {...props} target="blank" rel="noreferrer">
+    <a {...props} className="underline" target="blank" rel="noreferrer">
       {children}
     </a>
   );
@@ -51,7 +51,11 @@ const NotionText = ({
     style.color = "#CC3366";
   }
 
-  return <p className="whitespace-pre-line" style={style}>{children}</p>;
+  if (color) {
+    style.color = color;
+  }
+
+  return <span className="whitespace-pre-line" style={style}>{children}</span>;
 };
 
 const NotionRichTextItemText = ({
@@ -65,8 +69,9 @@ const NotionRichTextItemText = ({
 }) => {
   const LinkComponent = !!link ? Link : React.Fragment;
 
+  console.log(link);
   return (
-    <LinkComponent href={link}>
+    <LinkComponent {...(link ? {href: link} : {})}>
       <NotionText {...annotations}>{text}</NotionText>
     </LinkComponent>
   );
@@ -82,7 +87,7 @@ const NotionRichTextItem = ({
       return (
         <NotionRichTextItemText
           text={richTextItem.text?.content || ''}
-          link={richTextItem.text?.link}
+          link={richTextItem.text?.link?.url}
           annotations={richTextItem.annotations}
         />
       );

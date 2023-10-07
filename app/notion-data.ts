@@ -8,7 +8,9 @@ export interface NotionRichTextItemType {
   type: "text" | "mention" | "equation";
   text?: {
     content: string;
-    link?: string;
+    link?: {
+      url?: string;
+    };
   };
   mention?: {
     type:

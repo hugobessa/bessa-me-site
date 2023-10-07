@@ -137,7 +137,7 @@ export const ContactForm = ({
         disabled={isSubmitting}
         className="flex items-center justify-center bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 float-right"
       >
-        {isSubmitting ? <FaSpinner className="mr-3"/> : <FaPaperPlane  className="mr-3"/>} <div>Send Message</div>
+        {isSubmitting ? <FaSpinner className="mr-3 animate-spin"/> : <FaPaperPlane  className="mr-3"/>} <div>Send Message</div>
       </button>
     </form>
   );

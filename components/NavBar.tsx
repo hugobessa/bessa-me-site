@@ -1,4 +1,5 @@
 "use client";
+import { exo2 } from '@/app/fonts';
 import { useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
@@ -12,13 +13,13 @@ export const NavBar = ({ children }: {children: React.ReactNode}) => {
   return (
     <div className={mobileMenuOpen ? "max-h-screen overflow-hidden" : ""}>
       {/* Navigation */}
-      <nav className={`bg-white/70 backdrop-blur-lg dark:bg-gray-900 fixed rounded top-3 left-3 right-3 ${mobileMenuOpen && "bottom-3"} z-10 shadow-lg dark:shadow-[0_0_5px_1px_rgba(249,115,22,1)] px-3`}>
+      <nav className={`bg-white/70 backdrop-blur-lg dark:bg-gray-900 fixed rounded top-3 left-3 right-3 ${mobileMenuOpen && "bottom-3"} z-10 shadow-lg dark:shadow-[0_0_5px_1px_rgba(249,115,22,0.3)] px-3`}>
         <div className="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative flex items-center justify-between h-16">
             <div className="flex-1 flex items-center justify-between sm:items-stretch">
               <div className="flex-shrink-0 flex items-center">
-                <span className="text-orange-500 text-lg font-semibold">
-                  <a href="#hero">Hugo Bessa</a>
+                <span className="text-orange-600 text-lg font-semibold">
+                  <a href="#hero" className={`${exo2.className}`}>HUGO BESSA</a>
                 </span>
               </div>
               <div className="hidden sm:block sm:ml-6 float-right">
@@ -26,19 +27,19 @@ export const NavBar = ({ children }: {children: React.ReactNode}) => {
                   {/* Add links to sections */}
                   <a
                     href="#work"
-                    className="text-orange-500 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                    className="text-gray-600 dark:text-orange-500 hover:bg-gray-100 hover:text-orange-500 dark:hover:bg-transparent dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Work
                   </a>
                   <a
                     href="#content"
-                    className="text-orange-500 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                    className="text-gray-600 dark:text-orange-500 hover:bg-gray-100 hover:text-orange-500 dark:hover:bg-transparent dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Content
                   </a>
                   <a
                     href="#contact"
-                    className="text-orange-500 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                    className="text-gray-600 dark:text-orange-500 hover:bg-gray-100 hover:text-orange-500 dark:hover:bg-transparent dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Contact
                   </a>

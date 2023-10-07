@@ -136,7 +136,7 @@ const LandingPage = async () => {
       {/* Hero section */}
       <section
         id="hero"
-        className="bg-gradient-to-r from-red-500 to-yellow-500 text-white dark:text-gray-800"
+        className="bg-gradient-to-r from-yellow-500 to-red-500 text-white dark:text-gray-800"
       >
         <div className="container mx-auto md:w-2/3 px-2 md:max-h-800 pt-28">
           <div className="flex items-center justify-between flex-wrap">
@@ -281,13 +281,11 @@ const LandingPage = async () => {
                 <h2 className="text-3xl font-semibold mb-8">Languages</h2>
                 <div className="">
                   {languagesData?.map((language) => (
-                    <div key={language.id}>
-                      <p className="mt-2">
-                        <span className="font-semibold text-orange-500">
-                          {language.name}
-                        </span>{" "}
-                        {language.level}
-                      </p>
+                    <div key={language.id} className="mt-2 mb-5 last:mb-0 flex">
+                      <div className="font-semibold text-orange-500 mr-2 min-w-[25%]">
+                        {language.name}
+                      </div>{" "}
+                      <div className="text-gray-500 text-sm mt-1">{language.level}</div>
                     </div>
                   ))}
                 </div>
@@ -300,9 +298,10 @@ const LandingPage = async () => {
       {/* Content section */}
       <section id="content" className="py-12 bg-orange-200 dark:bg-black relative">
         <div
-          className="absolute w-full h-full opacity-70 dark:opacity-25 top-0 bg-left-top"
+          className="absolute w-full h-full opacity-40 dark:opacity-10 top-0 bg-left-top"
           style={{
-            backgroundImage: `url("/imgs/portfolio-bg.jpg")`,
+            backgroundImage: `url("/imgs/portfolio-bg-2.jpg")`,
+            backgroundPositionY: 0,
             backgroundSize: 'contain',
             filter: `blur(30px)`,
           }}
@@ -312,7 +311,7 @@ const LandingPage = async () => {
 
       {/* Contact section */}
       <section id="contact" className="pb-20 dark:bg-gray-900">
-        <div className="bg-gradient-to-r from-red-500 to-yellow-500 text-white h-2 mb-12"></div>
+        <div className=" text-white h-2 mb-12"></div>
         <div className="lg:w-2/3 md:mx-auto mx-4">
           <h2 className="text-3xl font-semibold mb-8 text-center">
             Send me a message
