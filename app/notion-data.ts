@@ -95,7 +95,7 @@ async function imageUrlToBase64(url: string) {
 
 const limiter = new Bottleneck({
   maxConcurrent: 1, // Only allow one request at a time
-  minTime: 1000, // Minimum time between each request (in milliseconds)
+  minTime: 340, // Minimum time between each request (in milliseconds)
 });
 
 async function _fetchNotionData(databaseId: string): Promise<any[]> {
