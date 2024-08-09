@@ -1,5 +1,6 @@
 // pages/notion-data.js
 import type * as BrandIcons from "react-icons/fa6";
+import Bottleneck from 'bottleneck';
 
 export type ValueType<T> = T extends Promise<infer U> ? U : T;
 
@@ -92,6 +93,11 @@ async function imageUrlToBase64(url: string) {
   }
 }
 
+const limiter = new Bottleneck({
+  maxConcurrent: 1, // Only allow one request at a time
+  minTime: 1000, // Minimum time between each request (in milliseconds)
+});
+
 async function _fetchNotionData(databaseId: string): Promise<any[]> {
   const baseUrl = "https://api.notion.com/v1/databases";
   const url = `${baseUrl}/${databaseId}/query`;
@@ -115,14 +121,16 @@ async function _fetchNotionData(databaseId: string): Promise<any[]> {
       params.start_cursor = startCursor;
     }
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(params),
-      next: {
-        revalidate: 0,
-      },
-    });
+    const response = await limiter.schedule(() =>
+      fetch(url, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(params),
+        next: {
+          revalidate: 0,
+        },
+      })
+    );
 
     if (!response.ok) {
       throw new Error(`Error fetching data: ${response.statusText}`);
