@@ -1,4 +1,4 @@
-import Server from 'next/server';
+import { NextResponse } from 'next/server';
 import sgMail from '@sendgrid/mail';
 
 type ContactFormData = {
@@ -25,10 +25,10 @@ async function sendEmail({ name, email, subject, body }: ContactFormData) {
     // Send the email using SendGrid
     await sgMail.send(emailData);
     // console.log("Email sent");
-    return Server.NextResponse.json({ message: 'Message sent successfully.' });
+    return NextResponse.json({ message: 'Message sent successfully.' });
   } catch (error) {
     console.error(error);
-    return Server.NextResponse.json({ message: 'Internal server error.' }, {status: 500});
+    return NextResponse.json({ message: 'Internal server error.' }, {status: 500});
   }
 }
 
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
 
   // console.log("Data to send email received", contactFormData);
   if (process.env.NODE_ENV === "production" && !await verifyCaptcha(contactFormData.captchaResponse)) {
-    return Server.NextResponse.json({ message: 'Captcha is invalid.' }, {status: 400});
+    return NextResponse.json({ message: 'Captcha is invalid.' }, {status: 400});
   }
   return await sendEmail(contactFormData);
 };

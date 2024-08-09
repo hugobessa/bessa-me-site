@@ -1,5 +1,5 @@
-import Server from 'next/server';
+import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
-  return Server.NextResponse.json({ message: "OK" })
+  return NextResponse.json({ message: "OK" })
 }
