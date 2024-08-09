@@ -129,6 +129,7 @@ async function _fetchNotionData(databaseId: string): Promise<any[]> {
         next: {
           revalidate: 0,
         },
+        cache: 'force-cache',
       })
     );
 
