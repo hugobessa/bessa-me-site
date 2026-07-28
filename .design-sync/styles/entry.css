@@ -1,0 +1,29 @@
+/* Stylesheet entry for the design-system bundle.
+ *
+ * Pulls in the site's real global stylesheet (app/globals.css — Tailwind
+ * directives, the colour custom properties, the dark-mode block and the
+ * heading rule) so the synced CSS is the site's own, then adds the two
+ * font-binding classes that stand in for next/font's generated class names.
+ * Compiled by cfg.buildCmd via .design-sync/tailwind.sync.js.
+ */
+
+@import '../../app/globals.css';
+
+/* next/font gives each family a hashed class (`__Exo_2_b72f86`) that only
+ * exists in a Next build. .design-sync/shims/next-font.ts hands components
+ * these names instead; they must resolve to the real families. */
+.ds-font-inter {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+.ds-font-exo2 {
+  font-family: 'Exo 2', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* In the app, layout.tsx puts `--font-titles` on <body> via exo2.variable, and
+ * globals.css points every heading at it. Nothing mounts <body> inside a
+ * preview card or a generated design, so bind it at the root instead — without
+ * this, headings silently render in the body font. */
+:root {
+  --font-titles: 'Exo 2', ui-sans-serif, system-ui, sans-serif;
+}

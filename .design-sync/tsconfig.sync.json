@@ -1,0 +1,29 @@
+{
+  /* tsconfig used ONLY by the design-sync converter (cfg.tsconfig).
+   *
+   * Differs from the repo's tsconfig.json in two deliberate ways:
+   *   1. `paths` redirects the two Next-only bindings at their shims, so
+   *      esbuild can bundle the components outside the Next build pipeline.
+   *   2. `jsx: react-jsx` instead of the repo's `preserve` — the repo hands
+   *      JSX to Next's compiler untouched, but esbuild has to actually
+   *      transform it here or the bundle ships raw JSX and fails to parse.
+   */
+  "compilerOptions": {
+    "target": "es2020",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "baseUrl": "..",
+    "paths": {
+      "next/image": [".design-sync/shims/next-image.tsx"],
+      "@/app/fonts": [".design-sync/shims/next-font.ts"],
+      "@/*": ["./*"]
+    }
+  }
+}

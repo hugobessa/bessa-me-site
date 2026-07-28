@@ -1,0 +1,33 @@
+{
+  "projectId": "fe3447dd-6a42-4ebc-af5d-cee59e992f4b",
+  "pkg": "bessa-me-site",
+  "globalName": "BessaMeSite",
+  "shape": "package",
+  "srcDir": "components",
+  "tsconfig": ".design-sync/tsconfig.sync.json",
+  "buildCmd": "npx tailwindcss -c .design-sync/tailwind.sync.js -i .design-sync/styles/entry.css -o .design-sync/styles/compiled.css --minify",
+  "readmeHeader": ".design-sync/conventions.md",
+  "cssEntry": ".design-sync/styles/compiled.css",
+  "extraFonts": [".design-sync/styles/fonts.css"],
+  "componentSrcMap": {
+    "ContactForm": "components/ContactForm.tsx",
+    "DynamicBrandedIcon": "components/DynamicBrandedIcon.tsx",
+    "EducationHistory": "components/EducationHistory.tsx",
+    "JobsHistory": "components/JobsHistory.tsx",
+    "NavBar": "components/NavBar.tsx",
+    "NotionRichText": "components/NotionRichText.tsx",
+    "Portfolio": "components/Portfolio.tsx"
+  },
+  "overrides": {
+    "NavBar": { "cardMode": "single", "primaryStory": "WithPageContent" }
+  },
+  "dtsPropsFor": {
+    "ContactForm": "  /** Google reCAPTCHA v2 site key, passed straight to the captcha widget. */\n  RECAPTCHA_SITE_KEY: string;\n  /** The captcha only renders when this is exactly \"production\". Any other value renders the form without it. */\n  NODE_ENV: string;",
+    "DynamicBrandedIcon": "  /** Icon name from react-icons/fa6, e.g. \"FaGithub\" | \"FaLinkedin\" | \"FaXTwitter\". An unknown name falls back to FaUser rather than throwing. */\n  name: string;\n  /** Forwarded to the underlying react-icons element. */\n  size?: string | number;\n  color?: string;\n  className?: string;\n  title?: string;",
+    "EducationHistory": "  educationHistoryData: Array<{\n    id: string;\n    course: string;\n    organizationId: string;\n    /** Free-text range as authored in Notion, e.g. \"Feb 2011 - Dec 2015\". */\n    date: string;\n    description: Array<{\n      id: string;\n      type: \"text\" | \"mention\" | \"equation\";\n      text?: { content: string; link?: { url?: string } };\n      equation?: string;\n      annotations: {\n        bold: boolean;\n        italic: boolean;\n        strikethrough: boolean;\n        underline: boolean;\n        code: boolean;\n        color: \"default\" | \"gray\" | \"brown\" | \"orange\" | \"yellow\" | \"green\" | \"blue\" | \"purple\" | \"pink\" | \"red\" | \"gray_background\" | \"brown_background\" | \"orange_background\" | \"yellow_background\" | \"green_background\" | \"blue_background\" | \"purple_background\" | \"pink_background\" | \"red_background\";\n      };\n    }>;\n  }>;\n  /** Organizations keyed by id. Every entry's organizationId must resolve here — a miss throws while rendering the logo. */\n  organizationsDataHash: { [key: string]: { id: string; name: string; logo: string; link: string } };",
+    "JobsHistory": "  jobsData: Array<{\n    id: string;\n    title: string;\n    organizationId: string;\n    /** Free-text range as authored in Notion, e.g. \"Jan 2020 - Present\". */\n    date: string;\n    description: Array<{\n      id: string;\n      type: \"text\" | \"mention\" | \"equation\";\n      text?: { content: string; link?: { url?: string } };\n      equation?: string;\n      annotations: {\n        bold: boolean;\n        italic: boolean;\n        strikethrough: boolean;\n        underline: boolean;\n        code: boolean;\n        color: \"default\" | \"gray\" | \"brown\" | \"orange\" | \"yellow\" | \"green\" | \"blue\" | \"purple\" | \"pink\" | \"red\" | \"gray_background\" | \"brown_background\" | \"orange_background\" | \"yellow_background\" | \"green_background\" | \"blue_background\" | \"purple_background\" | \"pink_background\" | \"red_background\";\n      };\n    }>;\n  }>;\n  /** Organizations keyed by id. Every entry's organizationId must resolve here — a miss throws while rendering the logo. */\n  organizationsDataHash: { [key: string]: { id: string; name: string; logo: string; link: string } };",
+    "NavBar": "  /** Page content, rendered directly below the fixed nav. The nav itself is position:fixed, so content needs its own top spacing. */\n  children: React.ReactNode;",
+    "NotionRichText": "  /** Notion rich-text items. Only items with type \"text\" render — \"mention\" and \"equation\" are skipped. */\n  richText: Array<{\n    id: string;\n    type: \"text\" | \"mention\" | \"equation\";\n    text?: { content: string; link?: { url?: string } };\n    equation?: string;\n    annotations: {\n      bold: boolean;\n      italic: boolean;\n      strikethrough: boolean;\n      underline: boolean;\n      code: boolean;\n      color: \"default\" | \"gray\" | \"brown\" | \"orange\" | \"yellow\" | \"green\" | \"blue\" | \"purple\" | \"pink\" | \"red\" | \"gray_background\" | \"brown_background\" | \"orange_background\" | \"yellow_background\" | \"green_background\" | \"blue_background\" | \"purple_background\" | \"pink_background\" | \"red_background\";\n    };\n  }>;",
+    "Portfolio": "  portfolioData: Array<{\n    id: string;\n    title: string;\n    /** When set, the whole card becomes a link opening in a new tab. */\n    link?: string;\n    tags: string[];\n    image?: string;\n    embed?: string;\n  }>;\n  /** The full tag vocabulary offered as filter chips, independent of which tags the items carry. */\n  tags: string[];"
+  }
+}
