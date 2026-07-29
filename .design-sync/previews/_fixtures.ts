@@ -54,12 +54,14 @@ export const rt = (
   annotations: { ...plain, ...annotations },
 });
 
-/** Rounded-square monogram logo, sized for the 64x64 slot the history rows use. */
+/** Square monogram logo, sized for the 64x64 slot the history rows use.
+ *  Hard corners, matching the Terminal Grid language — the tile it sits in is
+ *  a square ink-bordered box, and a rounded logo reads as a foreign object. */
 export const logo = (letter: string, bg: string): string =>
   'data:image/svg+xml;utf8,' +
   encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">` +
-      `<rect width="64" height="64" rx="14" fill="${bg}"/>` +
+      `<rect width="64" height="64" fill="${bg}"/>` +
       `<text x="32" y="43" font-family="Helvetica,Arial,sans-serif" font-size="30" ` +
       `font-weight="700" fill="#ffffff" text-anchor="middle">${letter}</text></svg>`,
   );
@@ -205,3 +207,70 @@ export const portfolioTags = [
   'Writing',
   'Open Source',
 ];
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * Terminal Grid frame
+ *
+ * Every section component (Section, Hero, SkillsSection, LanguagesSection,
+ * HistorySection, Portfolio, ContactSection) is a horizontal band of ONE card:
+ * they draw their own bottom rule and expect an ink border and a surface
+ * background around them, exactly as app/page.tsx composes them. Rendered bare
+ * on the card's default background they lose the frame that makes the language
+ * read, so every preview wraps in these two.
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+/** The page gutter the card floats in. */
+export const pageClassName = 'bg-page p-5';
+
+/** The card itself: ink frame + hard offset shadow, as in app/page.tsx. */
+export const cardClassName = 'bg-surface border-2 border-frame shadow-card';
+
+/* ── Data for the section components ─────────────────────────────────────── */
+
+/** Ordered high → low, the way the site sorts them. */
+export const skills = [
+  { id: 'sk-1', name: 'Software Engineering Teams Leadership', percentage: 100 },
+  { id: 'sk-2', name: 'React & TypeScript', percentage: 95 },
+  { id: 'sk-3', name: 'Python & Django', percentage: 90 },
+  { id: 'sk-4', name: 'System Architecture', percentage: 85 },
+  { id: 'sk-5', name: 'Product Discovery', percentage: 70 },
+  { id: 'sk-6', name: 'Infrastructure & CI', percentage: 65 },
+];
+
+/** `level` is prose, not a score — the component renders it as body copy. */
+export const languages = [
+  { id: 'lg-1', name: 'Portuguese', level: 'Native', order: 1 },
+  { id: 'lg-2', name: 'English', level: 'Full professional proficiency', order: 2 },
+  { id: 'lg-3', name: 'Spanish', level: 'Limited working proficiency', order: 3 },
+  { id: 'lg-4', name: 'French', level: 'Elementary', order: 4 },
+];
+
+/** Icon names are react-icons/fa6 exports — an unknown name falls back to FaUser. */
+export const contactInfo = [
+  { id: 'ct-1', icon: 'FaEnvelope', text: 'hugo@example.com', link: 'mailto:hugo@example.com' },
+  { id: 'ct-2', icon: 'FaGithub', text: 'github.com/hugobessa', link: 'https://example.com/github' },
+  { id: 'ct-3', icon: 'FaLinkedin', text: 'in/hugobessa', link: 'https://example.com/linkedin' },
+  { id: 'ct-4', icon: 'FaXTwitter', text: '@hugobessa', link: 'https://example.com/x' },
+  // no `link` — renders as a plain row rather than an anchor
+  { id: 'ct-5', icon: 'FaLocationDot', text: 'Recife, BR' },
+];
+
+/** The hero's dotted meta row — short mono strings. */
+export const heroMeta = [
+  'Engineering Manager @ Vinta Software',
+  'recife, br',
+  '9 yrs shipping',
+];
+
+/**
+ * HistorySection's own shape. JobsHistory/EducationHistory are thin adapters
+ * that build exactly this from Notion data, so previewing the generic section
+ * means flattening the fixtures the same way they do.
+ */
+export const historyEntries = jobs.map((job) => ({
+  id: job.id,
+  date: job.date,
+  detail: job.title,
+  organization: organizations[job.organizationId as keyof typeof organizations],
+  description: job.description,
+}));

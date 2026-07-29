@@ -9,6 +9,12 @@
   "readmeHeader": ".design-sync/conventions.md",
   "cssEntry": ".design-sync/styles/compiled.css",
   "extraFonts": [".design-sync/styles/fonts.css"],
+  "overrides": {
+    "Hero": { "cardMode": "column" },
+    "SkillsSection": { "cardMode": "column" },
+    "LanguagesSection": { "cardMode": "column" },
+    "Portfolio": { "viewport": "820x920" }
+  },
   "componentSrcMap": {
     "ContactForm": "components/ContactForm.tsx",
     "ContactSection": "components/ContactSection.tsx",

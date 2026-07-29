@@ -7,6 +7,23 @@
 // remote URL. Wired in via `paths` in .design-sync/tsconfig.sync.json.
 import React from 'react';
 
+/* Site-root asset paths only resolve when something is serving the site's
+ * public/ directory. Nothing is: not a preview card, and not a design the
+ * claude.ai/design agent builds out of these components — both would render a
+ * broken image. Components that reference site assets by root-relative path
+ * (today: Hero's portrait, `/imgs/my-pic.png`) are pointed at the deployed
+ * origin instead, which serves the identical file.
+ *
+ * Inlining the bytes as a data URI was the alternative; at 768 KB for the
+ * portrait alone it would have cost more than a third of the whole bundle.
+ *
+ * Only bare root-relative paths are rewritten — `//host/…` and absolute URLs
+ * (the Notion-hosted logos and covers) pass through untouched. */
+const SITE_ORIGIN = 'https://bessa.me';
+
+const resolveSrc = (src: string): string =>
+  src.startsWith('/') && !src.startsWith('//') ? `${SITE_ORIGIN}${src}` : src;
+
 export type ImageProps = Omit<
   React.ImgHTMLAttributes<HTMLImageElement>,
   'src' | 'width' | 'height'
@@ -43,7 +60,7 @@ const Image = ({
   ...props
 }: ImageProps) => (
   <img
-    src={src}
+    src={resolveSrc(src)}
     alt={alt}
     width={fill ? undefined : width}
     height={fill ? undefined : height}

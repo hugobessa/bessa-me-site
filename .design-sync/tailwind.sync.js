@@ -76,7 +76,10 @@ const safelist = [
   // ── Typography ────────────────────────────────────────────────────────────
   // `font-titles` is Exo 2 (the display face); `font-mono` carries the entire
   // metadata voice of this system, so both must survive.
-  { pattern: /^font-(titles|mono|sans|serif)$/ },
+  // No `font-serif`: this system ships no serif face, and safelisting it drags
+  // Cambria/Georgia into the stylesheet as families nothing can satisfy
+  // (validate flags it as [FONT_MISSING]).
+  { pattern: /^font-(titles|mono|sans)$/ },
   { pattern: /^text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl)$/, variants: BREAKPOINTS },
   { pattern: /^font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)$/ },
   { pattern: /^(leading|tracking)-(none|tight|snug|normal|relaxed|loose|wide|wider|widest|tighter)$/ },

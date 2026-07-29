@@ -1,45 +1,35 @@
 import { NavBar } from 'bessa-me-site';
+import { cardClassName, pageClassName } from './_fixtures';
 
-// The <nav> is position:fixed (top-3 left-3 right-3), so it pins to the card
-// viewport rather than to this wrapper. `children` is the page content beneath
-// it, which needs its own top spacing because the fixed bar is out of flow.
-// The section links (#work, #education, #content, #contact) are baked into the
-// component — the only prop is children.
+// NavBar takes no props: the wordmark, the section links and the theme toggle
+// are all baked in. It is `sticky top-0` inside the card rather than fixed to
+// the viewport, so it sits in flow at the top of the card and stays there while
+// the card scrolls.
 //
-// The hamburger / full-screen mobile menu is useState-driven, so only the
-// closed state renders statically; see NOTES.md.
+// On mount it measures its own height and publishes it as --nav-h, which is
+// what every Section header uses to park itself underneath. That only happens
+// when the bar is actually rendered — a page built without it keeps the 47px
+// fallback declared in the stylesheet.
+//
+// The hamburger and its full-screen panel are useState-driven, so this card
+// shows the closed state; below the `sm` breakpoint the links collapse into
+// that button. One export only — with no props there is no second variant that
+// would render any differently.
 
-const Section = ({ id, title, body }: { id: string; title: string; body: string }) => (
-  <section id={id} className="mx-auto max-w-3xl px-6 py-10">
-    <h2 className="text-3xl font-semibold mb-3">{title}</h2>
-    <p className="text-gray-600 max-w-prose">{body}</p>
-  </section>
-);
-
-export const WithPageContent = () => (
-  <NavBar>
-    <div className="pt-24 pb-10 bg-gray-50 min-h-[26rem]">
-      <Section
-        id="work"
-        title="Work"
-        body="Engineering manager and full stack developer. This block stands in for the page content the navigation scrolls through — the bar itself is fixed, so content needs its own top padding."
-      />
-      <Section
-        id="content"
-        title="Content"
-        body="Writing, talks and open source, filtered by tag on the live site."
-      />
-    </div>
-  </NavBar>
-);
-
-export const BarOverContent = () => (
-  <NavBar>
-    <div className="pt-24 bg-white min-h-[20rem]">
-      <div className="mx-auto max-w-3xl px-6">
-        <h1 className="text-4xl font-semibold mb-2">Hugo Bessa</h1>
-        <p className="text-gray-600">My live CV and repository of doings.</p>
+export const Bar = () => (
+  <div className={pageClassName}>
+    <div className={cardClassName}>
+      <NavBar />
+      <div className="px-6 py-8">
+        <h1 className="font-titles font-black text-[40px] leading-[.94] tracking-[-.02em] uppercase text-ink">
+          Page content
+        </h1>
+        <p className="mt-3 max-w-[50ch] text-base font-medium leading-[1.55] text-ink-body">
+          The bar rules off against the content below it. Its links scroll to
+          the sections whose ids they name — #work, #content and #contact on the
+          live site.
+        </p>
       </div>
     </div>
-  </NavBar>
+  </div>
 );
