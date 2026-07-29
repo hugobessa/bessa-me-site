@@ -123,7 +123,13 @@ Do not "fix" these in previews — they are how the shipped components behave.
 
 ## Known render warns
 
-None outstanding. One was resolved rather than recorded:
+- `[RENDER_SKIPPED] render check did not run (--no-render-check)` on a **no-change
+  re-sync** is expected, not a regression. The driver scopes the render check by what
+  ships: nothing to upload → skipped, render-affecting changes → full. Don't chase it;
+  if you actually want the full check on an unchanged tree, re-run the driver with
+  `--render-sample 0`.
+
+Otherwise none outstanding. One was resolved rather than recorded:
 
 - `[GRID_OVERFLOW] NavBar … (fixed/portal)` — the `<nav>` is `position: fixed`, so it
   pins to the card viewport and escapes a grid cell. Fixed with

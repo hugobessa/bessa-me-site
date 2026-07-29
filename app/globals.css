@@ -3,29 +3,122 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  /* replaced with the measured nav height on mount — see components/NavBar */
+  --nav-h: 47px;
+
+  --page: #E8E4DC;
+  --surface: #F2EDE4;
+  --surface-2: #E4DCCC;
+  --field: #FBF8F1;
+  --ink: #0E0E0E;
+  --ink-body: #2A2620;
+  --ink-muted: #6B6458;
+  --accent: #F26212;
+  /* text/glyph colour that sits on top of --accent */
+  --on-accent: #0E0E0E;
+
+  /* the outer card is framed in ink in both pairs; only the shadow changes,
+     turning accent in dark */
+  --frame: var(--ink);
+  --card-shadow: #0E0E0E;
+  /* inner dotted rules are full ink in light, but muted in dark */
+  --rule: #0E0E0E;
+
+  /* logo tiles hold third-party artwork — this one must NOT flip in dark mode,
+     or dark-inked logos disappear into the tile */
+  --logo-tile: #FBF8F1;
+
+  --border: 2px solid var(--ink);
+  --border-inner: 2px dotted var(--rule);
+  --shadow-sm: 2px 2px 0 var(--ink);
+  --shadow: 4px 4px 0 var(--ink);
+  --shadow-lg: 6px 6px 0 var(--ink);
+  --shadow-field: inset 0 -3px 0 var(--accent);
 }
 
+/* The dark pair applies from the system preference unless the reader has
+   explicitly chosen light, and from `data-theme="dark"` whichever way the
+   system leans. The two blocks are identical on purpose — plain CSS has no way
+   to share one, and both must exist for the toggle to override the media
+   query in either direction. Keep them in sync. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --page: #14100C;
+    --surface: #1E1611;
+    --surface-2: #3A2C22;
+    --field: #150F0B;
+    --ink: #F2EDE4;
+    --ink-body: #C8C0B4;
+    --ink-muted: #8C8478;
+    --accent: #FF7A29;
+    --on-accent: #1E1611;
+
+    --card-shadow: #FF7A29;
+    --rule: #54443A;
   }
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --page: #14100C;
+  --surface: #1E1611;
+  --surface-2: #3A2C22;
+  --field: #150F0B;
+  --ink: #F2EDE4;
+  --ink-body: #C8C0B4;
+  --ink-muted: #8C8478;
+  --accent: #FF7A29;
+  --on-accent: #1E1611;
+
+  --card-shadow: #FF7A29;
+  --rule: #54443A;
+}
+
+/* The toggle labels itself with the theme it switches TO. Which label shows is
+   decided in CSS, not React state, so the control is correct in the very first
+   painted frame — no flash, and nothing to mismatch during hydration. */
+/* both need an explicit display: the branches below only ever swap flex for
+   none, so without these the default (light, before any choice is stored) would
+   leave the visible one inline and its flex classes inert */
+.theme-when-light {
+  display: flex;
+}
+.theme-when-dark {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-when-dark {
+    display: flex;
+  }
+  :root:not([data-theme="light"]) .theme-when-light {
+    display: none;
+  }
+}
+:root[data-theme="dark"] .theme-when-dark {
+  display: flex;
+}
+:root[data-theme="dark"] .theme-when-light {
+  display: none;
+}
+:root[data-theme="light"] .theme-when-light {
+  display: flex;
+}
+
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--ink);
+  background: var(--page);
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-titles);
+}
+
+@layer components {
+  /* metadata voice: dates, counts, tags, labels, button captions */
+  .meta {
+    @apply font-mono text-xs font-bold uppercase tracking-[.12em];
+  }
 }

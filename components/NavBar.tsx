@@ -1,122 +1,122 @@
 "use client";
-import { exo2 } from '@/app/fonts';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { ThemeToggle } from './ThemeToggle';
 
-export const NavBar = ({ children }: {children: React.ReactNode}) => {
+const navCellClassName =
+  "flex items-center font-mono text-xs font-bold uppercase tracking-[.12em] text-ink px-[18px] border-l-2 border-ink transition-hard duration-120 ease-linear hover:bg-accent hover:text-on-accent";
+
+const mobileRowClassName =
+  "block w-full text-left font-mono text-xs font-bold uppercase tracking-[.12em] text-ink px-5 py-4 border-b-2 border-ink last:border-b-0 hover:bg-accent hover:text-on-accent";
+
+const NAV_ITEMS = [
+  { href: "#work", label: "work" },
+  { href: "#content", label: "content" },
+  { href: "#contact", label: "contact" },
+];
+
+const MOBILE_NAV_ITEMS = [
+  { href: "#skills", label: "skills" },
+  { href: "#work", label: "job history" },
+  { href: "#education", label: "education" },
+  { href: "#languages", label: "languages" },
+  { href: "#content", label: "content" },
+  { href: "#contact", label: "contact" },
+];
+
+export const NavBar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
 
-  const handleToggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
+  // Section headers park directly under the bar and anchor links stop clear of
+  // it, both off --nav-h. Measured rather than hard-coded: the bar's height
+  // moves with the display font loading and with the breakpoint.
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) {
+      return;
+    }
+    const publishHeight = () => {
+      // a zero reading (mid-remount, or measured before layout) would park the
+      // section headers at the top of the viewport, on top of this bar and its
+      // controls — keep the stylesheet fallback instead
+      if (nav.offsetHeight > 0) {
+        document.documentElement.style.setProperty(
+          "--nav-h",
+          `${nav.offsetHeight}px`
+        );
+      }
+    };
+
+    publishHeight();
+    const observer = new ResizeObserver(publishHeight);
+    observer.observe(nav);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className={mobileMenuOpen ? "max-h-screen overflow-hidden" : ""}>
-      {/* Navigation */}
-      <nav className={`bg-white/70 backdrop-blur-lg dark:bg-gray-900 fixed rounded top-3 left-3 right-3 ${mobileMenuOpen && "bottom-3"} z-10 shadow-lg dark:shadow-[0_0_5px_1px_rgba(249,115,22,0.3)] px-3`}>
-        <div className="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8">
-          <div className="relative flex items-center justify-between h-16">
-            <div className="flex-1 flex items-center justify-between sm:items-stretch">
-              <div className="flex-shrink-0 flex items-center">
-                <span className="text-orange-600 text-lg font-semibold">
-                  <a href="#hero" className={`${exo2.className}`}>HUGO BESSA</a>
-                </span>
-              </div>
-              <div className="hidden sm:block sm:ml-6 float-right">
-                <div className="flex space-x-4">
-                  {/* Add links to sections */}
-                  <a
-                    href="#work"
-                    className="text-gray-600 dark:text-orange-500 hover:bg-gray-100 hover:text-orange-500 dark:hover:bg-transparent dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    Work
-                  </a>
-                  <a
-                    href="#content"
-                    className="text-gray-600 dark:text-orange-500 hover:bg-gray-100 hover:text-orange-500 dark:hover:bg-transparent dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    Content
-                  </a>
-                  <a
-                    href="#contact"
-                    className="text-gray-600 dark:text-orange-500 hover:bg-gray-100 hover:text-orange-500 dark:hover:bg-transparent dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    Contact
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="-mr-2 flex sm:hidden">
-              <button
-                onClick={handleToggleMobileMenu}
-                type="button"
-                className="inline-flex items-center justify-center p-2 rounded-md text-orange-500 hover:text-orange-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 focus:ring-white"
-                aria-controls="mobile-menu"
-                aria-expanded="false"
-              >
-                <span className="sr-only">Open main menu</span>
-                {mobileMenuOpen ? (
-                  <FaTimes className="h-6 w-6" />
-                ) : (
-                  <FaBars className="h-6 w-6" />
-                )}
-              </button>
-            </div>
-          </div>
+    <nav
+      ref={navRef}
+      className="sticky top-0 z-30 flex items-stretch justify-between bg-surface border-b-2 border-ink"
+    >
+      <a
+        href="#hero"
+        className="flex items-center font-titles font-black text-[15px] tracking-[.14em] uppercase text-ink px-[18px] py-[14px] border-r-2 border-ink"
+      >
+        Bessa
+      </a>
+
+      {/* one toggle for both layouts: it sits left of the nav cells on desktop
+          and left of the menu button on mobile */}
+      <div className="flex items-stretch">
+        <ThemeToggle className="flex flex-col items-center justify-center px-3 text-ink-muted transition-hard duration-120 ease-linear hover:bg-accent hover:text-on-accent" />
+
+        <div className="hidden sm:flex">
+          {NAV_ITEMS.map((item) => (
+            <a key={item.href} href={item.href} className={navCellClassName}>
+              {item.label}
+            </a>
+          ))}
         </div>
 
-        {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div className="sm:hidden" id="mobile-menu">
-            <div className="flex flex-col justify-center min-h-screen text-center -mt-16">
-              {/* Add links to sections */}
-              <a
-                href="#skills"
-                onClick={handleToggleMobileMenu}
-                className="text-orange-500 hover:bg-white/50 dark:hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
-              >
-                Skills
-              </a>
-              <a
-                href="#job-history"
-                onClick={handleToggleMobileMenu}
-                className="text-orange-500 hover:bg-white/50 dark:hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
-              >
-                Job History
-              </a>
-              <a
-                href="#education"
-                onClick={handleToggleMobileMenu}
-                className="text-orange-500 hover:bg-white/50 dark:hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
-              >
-                Education
-              </a>
-              <a
-                href="#languages"
-                onClick={handleToggleMobileMenu}
-                className="text-orange-500 hover:bg-white/50 dark:hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
-              >
-                Languages
-              </a>
-              <a
-                href="#content"
-                onClick={handleToggleMobileMenu}
-                className="text-orange-500 hover:bg-white/50 dark:hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
-              >
-                Content
-              </a>
-              <a
-                href="#contact"
-                onClick={handleToggleMobileMenu}
-                className="text-orange-500 hover:bg-white/50 dark:hover:bg-gray-700 block px-3 py-6 rounded-md font-bold text-2xl"
-              >
-                Contact
-              </a>
-            </div>
-          </div>
-        )}
-      </nav>
-      {children}
-    </div>
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          type="button"
+          className="sm:hidden flex items-center justify-center px-[18px] border-l-2 border-ink text-ink hover:bg-accent hover:text-on-accent"
+          aria-controls="mobile-menu"
+          aria-expanded={mobileMenuOpen}
+        >
+          <span className="sr-only">Open main menu</span>
+          {mobileMenuOpen ? (
+            <FaTimes className="h-5 w-5" />
+          ) : (
+            <FaBars className="h-5 w-5" />
+          )}
+        </button>
+      </div>
+
+      {/* full-bleed stacked panel, one item per row */}
+      {mobileMenuOpen && (
+        <div
+          id="mobile-menu"
+          // `top-full` lands on the nav's padding box, i.e. above its bottom
+          // border, so the panel draws that rule itself. The bottom edge is a
+          // hard shadow rather than a border, so the panel reads as sitting on
+          // top of the page instead of being part of the card.
+          className="sm:hidden absolute z-10 top-full left-0 right-0 bg-surface border-t-2 border-b-2 border-ink shadow-[0_6px_0_var(--ink)]"
+        >
+          {MOBILE_NAV_ITEMS.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileMenuOpen(false)}
+              className={mobileRowClassName}
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+      )}
+    </nav>
   )
 }

@@ -12,7 +12,12 @@ const Link = ({
   children: React.ReactNode;
 } & React.LinkHTMLAttributes<HTMLAnchorElement>) => {
   return (
-    <a {...props} className="underline" target="blank" rel="noreferrer">
+    <a
+      {...props}
+      className="border-b-2 border-accent text-ink"
+      target="_blank"
+      rel="noreferrer"
+    >
       {children}
     </a>
   );
@@ -45,17 +50,20 @@ const NotionText = ({
     style.textDecoration = "underline";
   }
 
-  if (code) {
-    style.fontFamily = "monospaced";
-    style.backgroundColor = "gainsboro";
-    style.color = "#CC3366";
-  }
-
-  if (color) {
+  if (color && color !== "default") {
     style.color = color;
   }
 
-  return <span className="whitespace-pre-line" style={style}>{children}</span>;
+  return (
+    <span
+      className={`whitespace-pre-line${
+        code ? " font-mono text-[.9em] bg-surface-2 border-2 border-ink px-1 py-0.5" : ""
+      }`}
+      style={style}
+    >
+      {children}
+    </span>
+  );
 };
 
 const NotionRichTextItemText = ({
@@ -69,7 +77,6 @@ const NotionRichTextItemText = ({
 }) => {
   const LinkComponent = !!link ? Link : React.Fragment;
 
-  console.log(link);
   return (
     <LinkComponent {...(link ? {href: link} : {})}>
       <NotionText {...annotations}>{text}</NotionText>

@@ -4,6 +4,7 @@ import { FormEvent, ChangeEvent, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { FaPaperPlane, FaSpinner } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { fieldClassName, fieldLabelClassName } from "./styles";
 
 export const ContactForm = ({
   RECAPTCHA_SITE_KEY,
@@ -34,7 +35,7 @@ export const ContactForm = ({
       toast.success("Message sent successfully");
     } else {
       const error = await response.json();
-      toast.error(error.message); 
+      toast.error(error.message);
     }
   };
 
@@ -54,78 +55,55 @@ export const ContactForm = ({
   };
 
   return (
-    <form
-      onSubmit={handleFormSubmit}
-      className="space-y-4 md:block flex flex-col mb-6"
-    >
-      <div>
-        <label
-          htmlFor="name"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          From Name
-        </label>
+    <form onSubmit={handleFormSubmit} className="flex flex-col gap-3">
+      <label htmlFor="name" className={fieldLabelClassName}>
+        From Name
         <input
           type="text"
           name="name"
           id="name"
-          className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={fieldClassName}
           required
           value={form.name}
           onChange={handleFormChange}
         />
-      </div>
-      <div>
-        <label
-          htmlFor="email"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          From Email
-        </label>
+      </label>
+      <label htmlFor="email" className={fieldLabelClassName}>
+        From Email
         <input
           type="email"
           name="email"
           id="email"
-          className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={fieldClassName}
           required
           value={form.email}
           onChange={handleFormChange}
         />
-      </div>
-      <div>
-        <label
-          htmlFor="subject"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          Subject
-        </label>
+      </label>
+      <label htmlFor="subject" className={fieldLabelClassName}>
+        Subject
         <input
           type="text"
           name="subject"
           id="subject"
-          className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={fieldClassName}
           required
           value={form.subject}
           onChange={handleFormChange}
         />
-      </div>
-      <div>
-        <label
-          htmlFor="body"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          Message
-        </label>
+      </label>
+      <label htmlFor="body" className={fieldLabelClassName}>
+        Message
         <textarea
           name="body"
           id="body"
-          className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={`${fieldClassName} leading-[1.45] resize-y`}
           rows={4}
           required
           value={form.body}
           onChange={handleFormChange}
         ></textarea>
-      </div>
+      </label>
       {NODE_ENV === "production" && (
         <ReCAPTCHA
           sitekey={RECAPTCHA_SITE_KEY}
@@ -135,9 +113,10 @@ export const ContactForm = ({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="flex items-center justify-center bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 float-right"
+        className="self-start flex items-center gap-2 meta font-extrabold tracking-[.14em] px-5 py-3.5 border-2 border-ink bg-accent text-on-accent shadow-hard transition-hard duration-120 ease-linear enabled:hover:translate-x-0.5 enabled:hover:translate-y-0.5 enabled:hover:shadow-hard-sm enabled:active:translate-x-1 enabled:active:translate-y-1 enabled:active:shadow-none disabled:border-dashed disabled:border-ink-muted disabled:bg-surface-2 disabled:text-ink-muted disabled:shadow-none"
       >
-        {isSubmitting ? <FaSpinner className="mr-3 animate-spin"/> : <FaPaperPlane  className="mr-3"/>} <div>Send Message</div>
+        {isSubmitting ? <FaSpinner className="animate-spin" /> : <FaPaperPlane />}
+        <span>Send Message</span>
       </button>
     </form>
   );

@@ -1,4 +1,8 @@
 module.exports = {
+    // `next build` and `next dev` share .next by default, so building while a
+    // dev server is running wipes the chunks it is serving and the page loads
+    // with no JS. Set NEXT_DIST_DIR to build somewhere else alongside dev.
+    distDir: process.env.NEXT_DIST_DIR || '.next',
     images: {
         remotePatterns: [
             {

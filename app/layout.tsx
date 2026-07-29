@@ -16,8 +16,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body className={`${inter.className} ${exo2.variable}`}>
+        {/* Applies a stored theme choice before the page paints, so a reader who
+            picked light doesn't get a frame of dark first. Runs synchronously,
+            ahead of any React work. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t}}catch(e){}`,
+          }}
+        />
         {children}
         <ToastContainer position="top-center" />
       </body>

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React from "react";
 import {
   ContactInfo,
@@ -17,12 +16,13 @@ import {
   fetchSkills,
 } from "./notion-data";
 import { NavBar } from "@/components/NavBar";
+import { Hero } from "@/components/Hero";
+import { LanguagesSection, SkillsSection } from "@/components/SkillsSection";
 import { JobsHistory } from "@/components/JobsHistory";
 import { EducationHistory } from "@/components/EducationHistory";
 import { Portfolio } from "@/components/Portfolio";
-import { ContactForm } from "@/components/ContactForm";
+import { ContactSection } from "@/components/ContactSection";
 import { parse } from "date-fns";
-import { DynamicBrandedIcon } from "@/components/DynamicBrandedIcon";
 
 interface Props {
   organizationsDataHash: { [key: string]: Organization };
@@ -36,6 +36,14 @@ interface Props {
   RECAPTCHA_SITE_KEY: string;
   NODE_ENV: string;
 }
+
+const parseStartDate = (date?: string) => {
+  if (!date) {
+    return null;
+  }
+  const parsed = parse(date.split("-")[0].trim(), "LLL y", new Date());
+  return isNaN(parsed.getTime()) ? null : parsed;
+};
 
 const getNotionData = async (): Promise<Props> => {
   const [
@@ -117,6 +125,33 @@ const getNotionData = async (): Promise<Props> => {
   };
 }
 
+/** The hero's dotted meta row, derived from the job history. */
+const getHeroMeta = (
+  jobsData: Job[],
+  organizationsDataHash: { [key: string]: Organization }
+) => {
+  const currentJob = jobsData?.[0];
+  const currentOrganization = currentJob
+    ? organizationsDataHash[currentJob.organizationId]
+    : undefined;
+
+  const startYears = (jobsData ?? [])
+    .map((job) => parseStartDate(job.date))
+    .filter((date): date is Date => date !== null)
+    .map((date) => date.getFullYear());
+  const yearsShipping = startYears.length
+    ? new Date().getFullYear() - Math.min(...startYears)
+    : null;
+
+  return [
+    currentJob && currentOrganization
+      ? `${currentJob.title} @ ${currentOrganization.name}`
+      : null,
+    "recife, br",
+    yearsShipping ? `${yearsShipping} yrs shipping` : null,
+  ].filter((item): item is string => !!item);
+};
+
 const LandingPage = async () => {
   const {
     organizationsDataHash,
@@ -132,229 +167,28 @@ const LandingPage = async () => {
   } = await getNotionData();
 
   return (
-    <NavBar>
-      {/* Hero section */}
-      <section
-        id="hero"
-        className="bg-gradient-to-r from-yellow-500 to-red-500 text-white dark:text-gray-800"
-      >
-        <div className="container mx-auto md:w-2/3 px-2 md:max-h-800 pt-28">
-          <div className="flex items-center justify-between flex-wrap">
-            <div className="w-full lg:w-1/2 lg:order-last">
-              <h1 className="text-5xl pl-4 text-center lg:text-start">
-                Hi, I&apos;m <span className="font-bold">Hugo&nbsp;Bessa</span>
-              </h1>
-              <p className="text-2xl pl-4 mt-4 text-center lg:text-start">
-                Expert in building MVPs and scaling&nbsp;them. <br />
-                Amateur composer/producer in the free&nbsp;time.
-              </p>
-            </div>
-            <div className="w-full lg:w-1/2 lg:order-first text-center lg:text-start">
-              <Image
-                src="/imgs/my-pic.png"
-                width={400}
-                height={386}
-                alt="Man"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Work section */}
-      <section id="work" className="md:py-16 py-8 bg-gray-200 dark:bg-gray-900">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 container lg:w-2/3 mx-auto ">
-          <div className="grid gap-4 auto-rows-min">
-            {/* Skills medium screen and larger section */}
-            <div
-              id="skills"
-              className="md:hidden block md:mx-0 mx-4 py-8 px-4 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800"
-            >
-              <div className="px-2">
-                <h2 className="text-3xl font-semibold mb-8">Skills</h2>
-                <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {skillsData?.map((skill) => {
-                    const circumference = 30 * 2 * Math.PI;
-                    return (
-                      <div key={skill.id}>
-                        <div className="relative w-20 h-20 mx-auto">
-                          {/* Add circular gauge for skill percentage */}
-                          <div className="absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%]"> {skill.percentage}% </div>
-                          <svg className="w-20 h-20">
-                            <circle
-                              className="text-gray-300"
-                              strokeWidth="5"
-                              stroke="currentColor"
-                              fill="transparent"
-                              r="30"
-                              cx="40"
-                              cy="40"
-                            />
-                            <circle
-                              className="text-orange-500"
-                              strokeWidth="5"
-                              strokeDasharray={circumference}
-                              strokeDashoffset={
-                                circumference -
-                                (skill.percentage / 100) * circumference
-                              }
-                              strokeLinecap="round"
-                              stroke="currentColor"
-                              fill="transparent"
-                              r="30"
-                              cx="40"
-                              cy="40"
-                            />
-                          </svg>
-                        </div>
-                        <p className="mt-2 text-center">{skill.name}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Job history section */}
-            <JobsHistory jobsData={jobsData} organizationsDataHash={organizationsDataHash} />
-
-            {/* Education section */}
-            <EducationHistory educationHistoryData={educationHistoryData} organizationsDataHash={organizationsDataHash} />
-          </div>
-          <div className="grid gap-4 auto-rows-min">
-            {/* Skills small screen and smaller section */}
-            <div
-              id="skills"
-              className="md:block hidden md:mx-0 mx-4 py-8 px-4 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800"
-            >
-              <div className="px-2">
-                <h2 className="text-3xl font-semibold mb-8">Skills</h2>
-                <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {skillsData?.map((skill) => {
-                    const circumference = 30 * 2 * Math.PI;
-                    return (
-                      <div key={skill.id}>
-                        <div className="relative w-20 h-20 mx-auto">
-                          {/* Add circular gauge for skill percentage */}
-                          <div className="absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%]"> {skill.percentage}% </div>
-                          <svg className="w-20 h-20">
-                            <circle
-                              className="text-gray-300"
-                              strokeWidth="5"
-                              stroke="currentColor"
-                              fill="transparent"
-                              r="30"
-                              cx="40"
-                              cy="40"
-                            />
-                            <circle
-                              className="text-orange-600"
-                              strokeWidth="5"
-                              strokeDasharray={circumference}
-                              strokeDashoffset={
-                                circumference -
-                                (skill.percentage / 100) * circumference
-                              }
-                              strokeLinecap="round"
-                              stroke="currentColor"
-                              fill="transparent"
-                              r="30"
-                              cx="40"
-                              cy="40"
-                            />
-                          </svg>
-                        </div>
-                        <p className="mb-2 text-center">{skill.name}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Languages section */}
-            <div
-              id="skills"
-              className="md:mx-0 mx-4 py-8 px-4 rounded overflow-hidden shadow-lg bg-white dark:bg-gray-800"
-            >
-              <div className="px-2">
-                <h2 className="text-3xl font-semibold mb-8">Languages</h2>
-                <div className="">
-                  {languagesData?.map((language) => (
-                    <div key={language.id} className="mt-2 mb-5 last:mb-0 flex">
-                      <div className="font-semibold text-orange-500 mr-2 min-w-[25%]">
-                        {language.name}
-                      </div>{" "}
-                      <div className="text-gray-500 text-sm mt-1">{language.level}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Content section */}
-      <section id="content" className="py-12 bg-orange-200 dark:bg-black relative">
-        <div
-          className="absolute w-full h-full opacity-40 dark:opacity-10 top-0 bg-left-top"
-          style={{
-            backgroundImage: `url("/imgs/portfolio-bg-2.jpg")`,
-            backgroundPositionY: 0,
-            backgroundSize: 'contain',
-            filter: `blur(30px)`,
-          }}
+    <main className="px-5 pt-7 pb-14">
+      <div className="max-w-[1180px] w-full mx-auto bg-surface border-2 border-frame shadow-card">
+        <NavBar />
+        <Hero meta={getHeroMeta(jobsData, organizationsDataHash)} />
+        <SkillsSection skills={skillsData} />
+        <JobsHistory
+          jobsData={jobsData}
+          organizationsDataHash={organizationsDataHash}
         />
+        <EducationHistory
+          educationHistoryData={educationHistoryData}
+          organizationsDataHash={organizationsDataHash}
+        />
+        <LanguagesSection languages={languagesData} />
         <Portfolio portfolioData={portfolioData} tags={tags} />
-      </section>
-
-      {/* Contact section */}
-      <section id="contact" className="pb-20 dark:bg-gray-900">
-        <div className=" text-white h-2 mb-12"></div>
-        <div className="lg:w-2/3 md:mx-auto mx-4">
-          <h2 className="text-3xl font-semibold mb-8 text-center">
-            Send me a message
-          </h2>
-          <div className="md:flex">
-            <div className="md:p-5 md:w-1/2 w-full flex md:justify-auto justify-center mb-12 ">
-              <ul className="md:block flex gap-4">
-                {contactInfoData?.map((contact) => (
-                  <li key={contact.id} className="flex mb-3">
-                    {contact.link ? (
-                      <a
-                        href={contact.link}
-                        className="inline-flex items-center"
-                        target={
-                          !contact.link.startsWith("mailto:")
-                            ? "blank"
-                            : undefined
-                        }
-                      >
-                        <span className="md:inline-block text-orange-500 mr-2 p-1">
-                          <DynamicBrandedIcon name={contact.icon} />{" "}
-                        </span>
-                        <span className="md:inline hidden">{contact.text}</span>
-                      </a>
-                    ) : (
-                      <span className="inline-flex items-center">
-                        <span className="md:inline-block text-orange-500 mr-2 p-1">
-                          <DynamicBrandedIcon name={contact.icon} />
-                        </span>
-                        <span className="md:inline hidden">{contact.text}</span>
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="px-2 md:w-1/2 w-full">
-              <ContactForm NODE_ENV={NODE_ENV} RECAPTCHA_SITE_KEY={RECAPTCHA_SITE_KEY} />
-            </div>
-          </div>
-        </div>
-      </section>
-    </NavBar>
+        <ContactSection
+          contactInfoData={contactInfoData}
+          NODE_ENV={NODE_ENV}
+          RECAPTCHA_SITE_KEY={RECAPTCHA_SITE_KEY}
+        />
+      </div>
+    </main>
   );
 };
 
