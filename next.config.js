@@ -25,12 +25,15 @@ module.exports = {
             },
         ],
     },     
-    webpack: (config) => {
-        config.module.rules.push({
-            test: /\.svg$/,
-            use: ["@svgr/webpack"]
-        });
-
-        return config;
+    // Next 16 builds with Turbopack by default, so the old `webpack` hook that
+    // ran SVGs through @svgr/webpack is expressed as a Turbopack rule instead.
+    // Importing an .svg still yields a React component.
+    turbopack: {
+        rules: {
+            '*.svg': {
+                loaders: ['@svgr/webpack'],
+                as: '*.js',
+            },
+        },
     },
 };

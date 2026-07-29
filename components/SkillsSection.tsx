@@ -54,7 +54,7 @@ export const SkillsSection = ({
     {toolbelt?.length > 0 && (
       <div className="flex gap-3 items-baseline flex-wrap px-5 sm:px-6 py-3.5 border-t-2 border-ink bg-surface-2">
         <span className="meta text-ink-muted">toolbelt</span>
-        <span className="font-mono text-[11px] font-medium uppercase tracking-[.1em] text-ink-muted">
+        <span className="font-mono text-[11px] font-medium uppercase tracking-widest text-ink-muted">
           {toolbelt.join(" · ")}
         </span>
       </div>

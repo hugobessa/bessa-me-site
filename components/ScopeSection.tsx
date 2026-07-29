@@ -30,7 +30,7 @@ export const ScopeSection = ({ stats }: { stats: ScopeStat[] }) => (
             {stat.value}
           </span>
           <span className="meta text-ink">{stat.label}</span>
-          <span className="font-mono text-[10px] font-medium uppercase tracking-[.1em] text-ink-muted">
+          <span className="font-mono text-[10px] font-medium uppercase tracking-widest text-ink-muted">
             {stat.note}
           </span>
         </div>

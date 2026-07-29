@@ -2,7 +2,7 @@
 
 /** Field shell without width or padding, so callers size their own control. */
 export const fieldBaseClassName =
-  "bg-field border-2 border-ink text-sm font-medium text-ink outline-none placeholder:text-ink-muted focus:shadow-field-focus";
+  "bg-field border-2 border-ink text-sm font-medium text-ink outline-hidden placeholder:text-ink-muted focus:shadow-field-focus";
 
 /** Text input / textarea at form size. */
 export const fieldClassName = `${fieldBaseClassName} w-full px-3 py-[11px]`;

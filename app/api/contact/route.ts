@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 import sgMail from '@sendgrid/mail';
 
 type ContactFormData = {
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
   const contactFormData: ContactFormData = await req.json();
 
   // console.log("Data to send email received", contactFormData);
-  if (process.env.NODE_ENV === "production" && !await verifyCaptcha(contactFormData.captchaResponse)) {
+  if (process.env.NODE_ENV === "production" && !(await verifyCaptcha(contactFormData.captchaResponse))) {
     return NextResponse.json({ message: 'Captcha is invalid.' }, {status: 400});
   }
   return await sendEmail(contactFormData);

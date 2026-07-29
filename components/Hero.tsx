@@ -13,7 +13,7 @@ export const Hero = ({
 }) => (
   <section
     id="hero"
-    className="grid lg:grid-cols-[1fr_300px] border-b-2 border-ink scroll-mt-[var(--nav-h)]"
+    className="grid lg:grid-cols-[1fr_300px] border-b-2 border-ink scroll-mt-(--nav-h)"
   >
     <div className="flex flex-col gap-4 px-6 py-[34px] min-w-0 lg:border-r-2 border-ink">
       <div className="font-mono text-[11px] font-bold uppercase tracking-[.18em] text-ink">
@@ -42,7 +42,7 @@ export const Hero = ({
         </a>
       </div>
       {(meta.length > 0 || !!highlight) && (
-        <div className="flex flex-wrap items-center gap-[18px] pt-[14px] border-t-2 border-dotted border-rule font-mono text-[11px] font-bold uppercase tracking-[.1em] text-ink-muted">
+        <div className="flex flex-wrap items-center gap-[18px] pt-[14px] border-t-2 border-dotted border-rule font-mono text-[11px] font-bold uppercase tracking-widest text-ink-muted">
           {meta.map((item) => (
             <span key={item}>{item}</span>
           ))}

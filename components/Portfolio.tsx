@@ -58,7 +58,7 @@ const DefaultThumb = ({ title }: { title: string }) => {
   const fill = hash % 3 === 0 ? "bg-accent" : "bg-ink";
 
   return (
-    <div className="w-full aspect-[16/10] bg-stripes-45 border-b-2 border-ink flex items-center justify-center">
+    <div className="w-full aspect-16/10 bg-stripes-45 border-b-2 border-ink flex items-center justify-center">
       <div className="grid grid-cols-4 w-14 h-14 border-2 border-ink bg-surface">
         {cells.map((isFilled, index) => (
           <span key={index} className={isFilled ? fill : undefined} />
@@ -80,7 +80,7 @@ const CardCover = ({ item }: { item: PortfolioItem }) => (
         alt={item.title}
         width={400}
         height={250}
-        className="w-full aspect-[16/10] object-cover border-b-2 border-ink"
+        className="w-full aspect-16/10 object-cover border-b-2 border-ink"
         src={item.image}
       />
     ) : item.embed ? (
@@ -89,7 +89,7 @@ const CardCover = ({ item }: { item: PortfolioItem }) => (
          widget inside the iframe, so stretching one just adds its own blank
          background — centre those at their natural height instead. */
       <div
-        className={`w-full aspect-[16/10] overflow-hidden border-b-2 border-ink bg-accent flex items-center [&_iframe]:block [&_iframe]:w-full ${
+        className={`w-full aspect-16/10 overflow-hidden border-b-2 border-ink bg-accent flex items-center [&_iframe]:block [&_iframe]:w-full ${
           /soundcloud\.com/.test(item.embed) ? "" : "[&_iframe]:h-full"
         }`}
         dangerouslySetInnerHTML={{ __html: item.embed }}

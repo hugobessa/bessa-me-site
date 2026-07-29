@@ -1,124 +1,191 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-:root {
-  /* replaced with the measured nav height on mount — see components/NavBar */
-  --nav-h: 47px;
+@theme {
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-field: var(--field);
+  --color-ink: var(--ink);
+  --color-ink-body: var(--ink-body);
+  --color-ink-muted: var(--ink-muted);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-logo-tile: var(--logo-tile);
+  --color-frame: var(--frame);
+  --color-rule: var(--rule);
 
-  --page: #E8E4DC;
-  --surface: #F2EDE4;
-  --surface-2: #E4DCCC;
-  --field: #FBF8F1;
-  --ink: #0E0E0E;
-  --ink-body: #2A2620;
-  --ink-muted: #6B6458;
-  --accent: #F26212;
-  /* text/glyph colour that sits on top of --accent */
-  --on-accent: #0E0E0E;
+  --radius: 0;
 
-  /* the outer card is framed in ink in both pairs; only the shadow changes,
-     turning accent in dark */
-  --frame: var(--ink);
-  --card-shadow: #0E0E0E;
-  /* inner dotted rules are full ink in light, but muted in dark */
-  --rule: #0E0E0E;
+  --shadow-hard-sm: var(--shadow-sm);
+  --shadow-hard: var(--shadow);
+  --shadow-hard-lg: var(--shadow-lg);
+  --shadow-field-focus: var(--shadow-field);
+  --shadow-card: 6px 6px 0 var(--card-shadow);
 
-  /* logo tiles hold third-party artwork — this one must NOT flip in dark mode,
-     or dark-inked logos disappear into the tile */
-  --logo-tile: #FBF8F1;
+  --background-image-stripes: repeating-linear-gradient(
+    90deg,
+    var(--surface-2) 0 6px,
+    var(--surface) 6px 12px
+  );
+  --background-image-stripes-45: repeating-linear-gradient(
+    45deg,
+    var(--surface-2) 0 8px,
+    var(--surface) 8px 16px
+  );
 
-  --border: 2px solid var(--ink);
-  --border-inner: 2px dotted var(--rule);
-  --shadow-sm: 2px 2px 0 var(--ink);
-  --shadow: 4px 4px 0 var(--ink);
-  --shadow-lg: 6px 6px 0 var(--ink);
-  --shadow-field: inset 0 -3px 0 var(--accent);
+  --transition-property-hard: transform, box-shadow;
+
+  --transition-duration-120: 120ms;
 }
 
-/* The dark pair applies from the system preference unless the reader has
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+/* next/font sets `--font-titles` on <body> (see app/fonts.ts), so this can't go
+   through `@theme`: a theme entry of the same name emits a self-referential
+   `--font-titles` on :root. Declaring the utility directly reproduces what the
+   v3 `fontFamily.titles` config generated, fallback included. */
+@utility font-titles {
+  font-family: var(--font-titles), sans-serif;
+}
+
+@utility meta {
+  /* metadata voice: dates, counts, tags, labels, button captions */
+  @apply font-mono text-xs font-bold uppercase tracking-[.12em];
+}
+
+@layer utilities {
+  :root {
+    /* replaced with the measured nav height on mount — see components/NavBar */
+    --nav-h: 47px;
+
+    --page: #e8e4dc;
+    --surface: #f2ede4;
+    --surface-2: #e4dccc;
+    --field: #fbf8f1;
+    --ink: #0e0e0e;
+    --ink-body: #2a2620;
+    --ink-muted: #6b6458;
+    --accent: #f26212;
+    /* text/glyph colour that sits on top of --accent */
+    --on-accent: #0e0e0e;
+
+    /* the outer card is framed in ink in both pairs; only the shadow changes,
+     turning accent in dark */
+    --frame: var(--ink);
+    --card-shadow: #0e0e0e;
+    /* inner dotted rules are full ink in light, but muted in dark */
+    --rule: #0e0e0e;
+
+    /* logo tiles hold third-party artwork — this one must NOT flip in dark mode,
+     or dark-inked logos disappear into the tile */
+    --logo-tile: #fbf8f1;
+
+    --border: 2px solid var(--ink);
+    --border-inner: 2px dotted var(--rule);
+    --shadow-sm: 2px 2px 0 var(--ink);
+    --shadow: 4px 4px 0 var(--ink);
+    --shadow-lg: 6px 6px 0 var(--ink);
+    --shadow-field: inset 0 -3px 0 var(--accent);
+  }
+
+  /* The dark pair applies from the system preference unless the reader has
    explicitly chosen light, and from `data-theme="dark"` whichever way the
    system leans. The two blocks are identical on purpose — plain CSS has no way
    to share one, and both must exist for the toggle to override the media
    query in either direction. Keep them in sync. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      color-scheme: dark;
+
+      --page: #14100c;
+      --surface: #1e1611;
+      --surface-2: #3a2c22;
+      --field: #150f0b;
+      --ink: #f2ede4;
+      --ink-body: #c8c0b4;
+      --ink-muted: #8c8478;
+      --accent: #ff7a29;
+      --on-accent: #1e1611;
+
+      --card-shadow: #ff7a29;
+      --rule: #54443a;
+    }
+  }
+
+  :root[data-theme='dark'] {
     color-scheme: dark;
 
-    --page: #14100C;
-    --surface: #1E1611;
-    --surface-2: #3A2C22;
-    --field: #150F0B;
-    --ink: #F2EDE4;
-    --ink-body: #C8C0B4;
-    --ink-muted: #8C8478;
-    --accent: #FF7A29;
-    --on-accent: #1E1611;
+    --page: #14100c;
+    --surface: #1e1611;
+    --surface-2: #3a2c22;
+    --field: #150f0b;
+    --ink: #f2ede4;
+    --ink-body: #c8c0b4;
+    --ink-muted: #8c8478;
+    --accent: #ff7a29;
+    --on-accent: #1e1611;
 
-    --card-shadow: #FF7A29;
-    --rule: #54443A;
+    --card-shadow: #ff7a29;
+    --rule: #54443a;
   }
-}
 
-:root[data-theme="dark"] {
-  color-scheme: dark;
-
-  --page: #14100C;
-  --surface: #1E1611;
-  --surface-2: #3A2C22;
-  --field: #150F0B;
-  --ink: #F2EDE4;
-  --ink-body: #C8C0B4;
-  --ink-muted: #8C8478;
-  --accent: #FF7A29;
-  --on-accent: #1E1611;
-
-  --card-shadow: #FF7A29;
-  --rule: #54443A;
-}
-
-/* The toggle labels itself with the theme it switches TO. Which label shows is
+  /* The toggle labels itself with the theme it switches TO. Which label shows is
    decided in CSS, not React state, so the control is correct in the very first
    painted frame — no flash, and nothing to mismatch during hydration. */
-/* both need an explicit display: the branches below only ever swap flex for
+  /* both need an explicit display: the branches below only ever swap flex for
    none, so without these the default (light, before any choice is stored) would
    leave the visible one inline and its flex classes inert */
-.theme-when-light {
-  display: flex;
-}
-.theme-when-dark {
-  display: none;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme-when-dark {
+  .theme-when-light {
     display: flex;
   }
-  :root:not([data-theme="light"]) .theme-when-light {
+  .theme-when-dark {
     display: none;
   }
-}
-:root[data-theme="dark"] .theme-when-dark {
-  display: flex;
-}
-:root[data-theme="dark"] .theme-when-light {
-  display: none;
-}
-:root[data-theme="light"] .theme-when-light {
-  display: flex;
-}
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .theme-when-dark {
+      display: flex;
+    }
+    :root:not([data-theme='light']) .theme-when-light {
+      display: none;
+    }
+  }
+  :root[data-theme='dark'] .theme-when-dark {
+    display: flex;
+  }
+  :root[data-theme='dark'] .theme-when-light {
+    display: none;
+  }
+  :root[data-theme='light'] .theme-when-light {
+    display: flex;
+  }
 
-body {
-  color: var(--ink);
-  background: var(--page);
-}
+  body {
+    color: var(--ink);
+    background: var(--page);
+  }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-titles);
-}
-
-@layer components {
-  /* metadata voice: dates, counts, tags, labels, button captions */
-  .meta {
-    @apply font-mono text-xs font-bold uppercase tracking-[.12em];
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-titles);
   }
 }

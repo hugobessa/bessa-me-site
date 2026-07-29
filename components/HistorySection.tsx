@@ -69,7 +69,7 @@ const HistoryRow = ({
   return (
     <div className="flex items-start gap-4 px-5 sm:px-6 py-[18px] [border-bottom:2px_dotted_var(--rule)] last:[border-bottom:0]">
       {timeline && <TimelineRail {...timeline} />}
-      <span className="flex items-center justify-center w-10 h-10 min-w-[2.5rem] sm:w-13 sm:h-13 sm:min-w-[3.25rem] border-2 border-ink bg-logo-tile">
+      <span className="flex items-center justify-center w-10 h-10 min-w-10 sm:w-13 sm:h-13 sm:min-w-13 border-2 border-ink bg-logo-tile">
         <Image
           className="w-full h-full object-contain p-1"
           width={48}
@@ -97,12 +97,12 @@ const HistoryRow = ({
           </span>
         )}
         {entry.outcome && (
-          <p className="text-sm font-medium leading-[1.5] text-ink-body max-w-[68ch]">
+          <p className="text-sm font-medium leading-normal text-ink-body max-w-[68ch]">
             {entry.outcome}
           </p>
         )}
         {isOpen && (
-          <div className="text-sm leading-[1.5] text-ink-body border-2 border-ink bg-surface-2 p-3">
+          <div className="text-sm leading-normal text-ink-body border-2 border-ink bg-surface-2 p-3">
             <NotionRichText richText={entry.description} />
           </div>
         )}

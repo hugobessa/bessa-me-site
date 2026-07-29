@@ -23,7 +23,7 @@ export const ContactSection = ({
 }) => (
   <section
     id="contact"
-    className="grid md:grid-cols-2 border-b-2 border-ink last:border-b-0 scroll-mt-[var(--nav-h)]"
+    className="grid md:grid-cols-2 border-b-2 border-ink last:border-b-0 scroll-mt-(--nav-h)"
   >
     <div className="flex flex-col gap-3.5 p-6 md:border-r-2 border-ink">
       <h2 className="font-titles font-black text-[30px] leading-none uppercase text-ink">

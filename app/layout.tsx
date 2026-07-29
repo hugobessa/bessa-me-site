@@ -1,7 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/ReactToastify.css';
 import { exo2, inter } from './fonts';
 
 export const metadata: Metadata = {
