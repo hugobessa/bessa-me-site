@@ -1,0 +1,46 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Lint & typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      # `next build` renders the page, which calls the Notion API, so a full
+      # build here would need every NOTION_* secret. Render builds with those
+      # already set, so CI just typechecks.
+      - run: npx tsc --noEmit
+
+  deploy:
+    name: Deploy
+    needs: verify
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      # The hook deploys whatever is at the tip of the branch Render tracks, so
+      # it can pick up a newer commit than the one CI just verified.
+      - name: Trigger Render deploy
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: curl -sS --fail-with-body -X POST "$RENDER_DEPLOY_HOOK_URL"
