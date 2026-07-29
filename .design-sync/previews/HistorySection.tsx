@@ -10,8 +10,12 @@ import {
 // The generic timeline band. JobsHistory and EducationHistory are thin adapters
 // over this — they map Notion data into `entries` and pass a fixed id/title.
 //
-// Two behaviours the cards below are built to show:
-//   * with 2+ entries a rail is drawn down the rows, starting and ending on a
+// Three behaviours the cards below are built to show:
+//   * consecutive entries at the same organization collapse into one row —
+//     one logo, one company header, the group's outer span above it, and the
+//     roles stacked under dotted rules, each with a small marker of its own on
+//     the rail beneath the company's larger one;
+//   * with 2+ groups a rail is drawn down the rows, starting and ending on a
 //     marker rather than running off the section;
 //   * a single entry is a point, not a timeline, so the rail is dropped.
 //

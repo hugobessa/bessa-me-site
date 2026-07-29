@@ -5,7 +5,11 @@ import Bottleneck from 'bottleneck';
 export type ValueType<T> = T extends Promise<infer U> ? U : T;
 
 export interface NotionRichTextItemType {
-  id: string;
+  /**
+   * Not part of Notion's `rich_text` payload — the API returns runs without any
+   * identity of their own. Optional so nothing keys off it expecting a value.
+   */
+  id?: string;
   type: "text" | "mention" | "equation";
   text?: {
     content: string;

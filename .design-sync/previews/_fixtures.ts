@@ -119,10 +119,12 @@ export const jobs = [
       rt('job-1-e', ' that now precedes every architectural change.'),
     ],
   },
+  // Consecutive at the same org as job-1: the two collapse under one logo and
+  // one company header, with the group's outer span above them.
   {
     id: 'job-2',
-    title: 'Senior Software Engineer',
-    organizationId: 'org-northloop',
+    title: 'Tech Lead',
+    organizationId: 'org-vinta',
     date: 'Jun 2018 - Feb 2021',
     description: [
       rt('job-2-a', 'Rebuilt the customer dashboard in React and TypeScript, cutting median '),
@@ -132,12 +134,23 @@ export const jobs = [
   },
   {
     id: 'job-3',
+    title: 'Senior Software Engineer',
+    organizationId: 'org-northloop',
+    date: 'Mar 2017 - May 2018',
+    description: [
+      rt('job-3-x', 'Shipped the first version of the payments integration and the '),
+      rt('job-3-y', 'on-call rotation', { bold: true }),
+      rt('job-3-z', ' that the engineering team still runs.'),
+    ],
+  },
+  {
+    id: 'job-4',
     title: 'Full Stack Developer',
     organizationId: 'org-rocketseat',
-    date: 'Jan 2016 - May 2018',
+    date: 'Jan 2016 - Feb 2017',
     description: [
-      rt('job-3-a', 'Built and maintained Django and React applications for education clients, '),
-      rt('job-3-b', 'and mentored six junior developers through their first year.'),
+      rt('job-4-a', 'Built and maintained Django and React applications for education clients, '),
+      rt('job-4-b', 'and mentored six junior developers through their first year.'),
     ],
   },
 ];
