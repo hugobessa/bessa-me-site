@@ -10,14 +10,17 @@ const mobileRowClassName =
   "block w-full text-left font-mono text-xs font-bold uppercase tracking-[.12em] text-ink px-5 py-4 border-b-2 border-ink last:border-b-0 hover:bg-accent hover:text-on-accent";
 
 const NAV_ITEMS = [
+  { href: "#leadership", label: "leadership" },
   { href: "#work", label: "work" },
   { href: "#content", label: "content" },
   { href: "#contact", label: "contact" },
 ];
 
 const MOBILE_NAV_ITEMS = [
-  { href: "#skills", label: "skills" },
+  { href: "#scope", label: "scope" },
+  { href: "#leadership", label: "how i lead" },
   { href: "#work", label: "job history" },
+  { href: "#skills", label: "what i'm good at" },
   { href: "#education", label: "education" },
   { href: "#languages", label: "languages" },
   { href: "#content", label: "content" },

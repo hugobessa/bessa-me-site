@@ -2,6 +2,16 @@ import { ContactInfo } from "@/app/notion-data";
 import { ContactForm } from "./ContactForm";
 import { DynamicBrandedIcon } from "./DynamicBrandedIcon";
 
+/**
+ * Positioning, not availability: what the work looks like when it happens, so a
+ * reader who got this far doesn't have to guess whether they're the right
+ * conversation. Deliberately says nothing about being open to roles.
+ */
+const HOW_I_WORK: [string, string][] = [
+  ["focus", "Hands-on Engineering Management"],
+  ["setup", "Remote · EU/US overlap · Recife, BR"],
+];
+
 export const ContactSection = ({
   contactInfoData,
   RECAPTCHA_SITE_KEY,
@@ -21,6 +31,20 @@ export const ContactSection = ({
         <br />
         <span className="bg-accent text-on-accent px-1.5">message</span>
       </h2>
+      <span className="meta text-ink-muted">how i work</span>
+      <div className="flex flex-col border-2 border-ink">
+        {HOW_I_WORK.map(([label, value], index) => (
+          <div
+            key={label}
+            className={`flex justify-between items-baseline gap-4 px-3 py-[11px] ${
+              index < HOW_I_WORK.length - 1 ? "border-b-2 border-ink" : ""
+            }`}
+          >
+            <span className="meta text-ink-muted">{label}</span>
+            <span className="meta text-ink text-right">{value}</span>
+          </div>
+        ))}
+      </div>
       <div className="flex flex-col border-2 border-ink">
         {contactInfoData?.map((contact) => {
           const row = (

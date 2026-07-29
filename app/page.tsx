@@ -1,27 +1,49 @@
 import React from "react";
 import {
+  Capability,
   ContactInfo,
   Education,
   Job,
   Language,
+  Leadership,
   Organization,
   PortfolioItem,
   Skill,
+  Stat,
+  fetchCapabilities,
   fetchContactInfo,
   fetchEducationHistory,
   fetchJobHistory,
   fetchLanguages,
+  fetchLeadership,
   fetchOrganizations,
   fetchPortfolioContent,
   fetchSkills,
+  fetchStats,
 } from "./notion-data";
 import { NavBar } from "@/components/NavBar";
 import { Hero } from "@/components/Hero";
-import { LanguagesSection, SkillsSection } from "@/components/SkillsSection";
+import { ScopeSection, ScopeStat } from "@/components/ScopeSection";
+import {
+  HowILeadSection,
+  LeadershipPrinciple,
+} from "@/components/HowILeadSection";
+import {
+  CapabilityGroup,
+  LanguagesSection,
+  SkillsSection,
+} from "@/components/SkillsSection";
 import { JobsHistory } from "@/components/JobsHistory";
 import { EducationHistory } from "@/components/EducationHistory";
 import { Portfolio } from "@/components/Portfolio";
+import { contentFormat } from "@/components/contentFormat";
 import { ContactSection } from "@/components/ContactSection";
+import {
+  CAPABILITY_GROUPS,
+  HERO_HIGHLIGHT,
+  LEADERSHIP_PRINCIPLES,
+  SCOPE_STATS,
+} from "./positioning";
 import { parse } from "date-fns";
 
 interface Props {
@@ -29,6 +51,9 @@ interface Props {
   jobsData: Job[];
   educationHistoryData: Education[];
   skillsData: Skill[];
+  statsData: Stat[];
+  leadershipData: Leadership[];
+  capabilitiesData: Capability[];
   languagesData: Language[];
   portfolioData: PortfolioItem[];
   contactInfoData: ContactInfo[];
@@ -51,6 +76,9 @@ const getNotionData = async (): Promise<Props> => {
     jobsData,
     educationHistoryData,
     skillsData,
+    statsData,
+    leadershipData,
+    capabilitiesData,
     languagesData,
     portfolioData,
     contactInfoData,
@@ -59,6 +87,9 @@ const getNotionData = async (): Promise<Props> => {
     fetchJobHistory(),
     fetchEducationHistory(),
     fetchSkills(),
+    fetchStats(),
+    fetchLeadership(),
+    fetchCapabilities(),
     fetchLanguages(),
     fetchPortfolioContent(),
     fetchContactInfo(),
@@ -92,8 +123,24 @@ const getNotionData = async (): Promise<Props> => {
     return a.order - b.order;
   });
 
+  // `Order` is the authored sequence, so the toolbelt reads the way it was
+  // written rather than alphabetically. Rows without one fall to the back, in
+  // the percentage order the DB used before that column existed.
   skillsData.sort((a, b) => {
-    return b.percentage - a.percentage;
+    return (a.order ?? Infinity) - (b.order ?? Infinity) ||
+      b.percentage - a.percentage;
+  });
+
+  capabilitiesData.sort((a, b) => {
+    return (a.order ?? Infinity) - (b.order ?? Infinity);
+  });
+
+  statsData.sort((a, b) => {
+    return (a.order ?? Infinity) - (b.order ?? Infinity);
+  });
+
+  leadershipData.sort((a, b) => {
+    return (a.order ?? Infinity) - (b.order ?? Infinity);
   });
 
   const tags = [
@@ -116,6 +163,9 @@ const getNotionData = async (): Promise<Props> => {
     jobsData,
     educationHistoryData,
     skillsData,
+    statsData,
+    leadershipData,
+    capabilitiesData,
     languagesData,
     portfolioData,
     contactInfoData,
@@ -152,12 +202,82 @@ const getHeroMeta = (
   ].filter((item): item is string => !!item);
 };
 
+/**
+ * The scope cells, in the `Order` sequence the caller sorted on. As with the
+ * capability columns below, the repo's own copy stands in only when the DB gives
+ * nothing back — see ./positioning.
+ */
+const getScopeStats = (statsData: Stat[]): ScopeStat[] =>
+  statsData?.length > 0
+    ? statsData.map(({ name, value, description }) => ({
+        value,
+        label: name,
+        note: description,
+      }))
+    : SCOPE_STATS;
+
+/**
+ * The leadership principles, in the `Order` sequence the caller sorted on, each
+ * resolving its `Portfolio Content` relation against the content already
+ * fetched for the portfolio band — the artifact is a content item, not a second
+ * copy of one, so it costs no extra request.
+ *
+ * A principle links its first related item. Nothing linked renders the claim
+ * without a proof row.
+ */
+const getLeadershipPrinciples = (
+  leadershipData: Leadership[],
+  portfolioData: PortfolioItem[]
+): LeadershipPrinciple[] => {
+  if (!leadershipData?.length) {
+    return LEADERSHIP_PRINCIPLES;
+  }
+
+  const contentById = new Map(
+    (portfolioData ?? []).map((item) => [item.id, item])
+  );
+
+  return leadershipData.map(({ name, description, portfolioContentIds }) => {
+    const [artifactId] = portfolioContentIds;
+    const artifact = artifactId ? contentById.get(artifactId) : undefined;
+    // the content DB has no `Kind` column, so the format comes off the item's
+    // own tags — see components/contentFormat
+    const format = artifact && contentFormat(artifact);
+
+    return {
+      title: name,
+      body: description,
+      proof: artifact?.link
+        ? {
+            label: format ? `${format} — ${artifact.title}` : artifact.title,
+            href: artifact.link,
+          }
+        : undefined,
+    };
+  });
+};
+
+/**
+ * The capability columns, in the `Order` sequence the caller sorted on. The
+ * repo's own copy stands in only when the DB gives nothing back — see
+ * ./positioning.
+ */
+const getCapabilityGroups = (
+  capabilitiesData: Capability[]
+): CapabilityGroup[] =>
+  capabilitiesData?.length > 0
+    ? capabilitiesData.map(({ name, items }) => ({ label: name, items }))
+    : CAPABILITY_GROUPS;
+
 const LandingPage = async () => {
   const {
     organizationsDataHash,
     jobsData,
     educationHistoryData,
     skillsData,
+    statsData,
+    leadershipData,
+    capabilitiesData,
     languagesData,
     portfolioData,
     contactInfoData,
@@ -166,15 +286,26 @@ const LandingPage = async () => {
     NODE_ENV,
   } = await getNotionData();
 
+
   return (
     <main className="px-5 pt-7 pb-14">
       <div className="max-w-[1180px] w-full mx-auto bg-surface border-2 border-frame shadow-card">
         <NavBar />
-        <Hero meta={getHeroMeta(jobsData, organizationsDataHash)} />
-        <SkillsSection skills={skillsData} />
+        <Hero
+          meta={getHeroMeta(jobsData, organizationsDataHash)}
+          highlight={HERO_HIGHLIGHT}
+        />
+        <ScopeSection stats={getScopeStats(statsData)} />
+        <HowILeadSection
+          principles={getLeadershipPrinciples(leadershipData, portfolioData)}
+        />
         <JobsHistory
           jobsData={jobsData}
           organizationsDataHash={organizationsDataHash}
+        />
+        <SkillsSection
+          groups={getCapabilityGroups(capabilitiesData)}
+          toolbelt={(skillsData ?? []).map((skill) => skill.name)}
         />
         <EducationHistory
           educationHistoryData={educationHistoryData}

@@ -93,10 +93,39 @@ async function imageUrlToBase64(url: string) {
   }
 }
 
+/**
+ * A Notion `rich_text` cell as a plain string, or undefined when the column is
+ * absent or empty. Columns read through this one are optional by design: the
+ * site renders without them and picks them up the moment they're filled in.
+ */
+function plainText(property: any): string | undefined {
+  const runs: any[] = property?.rich_text ?? [];
+  const text = runs
+    .map((run) => run.plain_text ?? run.text?.content ?? "")
+    .join("")
+    .trim();
+  return text || undefined;
+}
+
 const limiter = new Bottleneck({
   maxConcurrent: 1, // Only allow one request at a time
   minTime: 340, // Minimum time between each request (in milliseconds)
 });
+
+/**
+ * Scopes Next's fetch cache to a single build.
+ *
+ * `force-cache` is what keeps `/` static, but its entries live on disk in
+ * `<distDir>/cache/fetch-cache` and, with no `revalidate`, never expire. A host
+ * that preserves that directory between builds would serve every redeploy the
+ * *first* build's Notion content, indefinitely. The cache key covers the request
+ * headers, so a value that changes once per process retires the whole cache the
+ * moment a build starts — while still de-duplicating fetches within it.
+ *
+ * Deliberately not the commit SHA: redeploying the same commit after editing
+ * Notion has to pick the edits up, and a SHA wouldn't have moved.
+ */
+const BUILD_ID = String(Date.now());
 
 async function _fetchNotionData(databaseId: string): Promise<any[]> {
   const baseUrl = "https://api.notion.com/v1/databases";
@@ -106,6 +135,8 @@ async function _fetchNotionData(databaseId: string): Promise<any[]> {
   const headers = {
     Authorization: `Bearer ${process.env.NOTION_API_KEY}`,
     "Notion-Version": "2022-06-28", // Adjust the API version as needed
+    // ignored by Notion; present so the fetch cache key changes per build
+    "X-Build-Id": BUILD_ID,
   };
 
   let allRows: any[] = [];
@@ -126,10 +157,12 @@ async function _fetchNotionData(databaseId: string): Promise<any[]> {
         method: "POST",
         headers: headers,
         body: JSON.stringify(params),
-        next: {
-          revalidate: 0,
-        },
-        cache: 'force-cache',
+        // Cached for the lifetime of the build, which is what keeps `/` a
+        // static page: one uncacheable fetch opts the whole route into
+        // per-request rendering. Deliberately no `revalidate` — pairing one
+        // with `force-cache` is a contradiction Next resolves by going dynamic,
+        // and the content only changes when the site is rebuilt anyway.
+        cache: "force-cache",
       })
     );
 
@@ -157,6 +190,10 @@ export interface PortfolioItem {
   tags: string[];
   image?: string;
   embed?: string;
+  /** `Featured` (checkbox) — pins the item above the grid. */
+  featured?: boolean;
+  /** `Kind` (select) — talk / writing / open source / song, shown on the cover. */
+  kind?: string;
 }
 
 export interface Organization {
@@ -172,6 +209,10 @@ export interface Job {
   organizationId: string;
   date: string;
   description: NotionRichTextItemType[];
+  /** `Scope` (rich_text) — the always-visible chip: team size, remit, span. */
+  scope?: string;
+  /** `Outcome` (rich_text) — the always-visible line under the chip. */
+  outcome?: string;
 }
 
 export interface Education {
@@ -185,7 +226,41 @@ export interface Education {
 export interface Skill {
   id: string;
   name: string;
+  /** No longer rendered — the toolbelt line is unranked. */
   percentage: number;
+  /** `Order` (number) — the authored sequence. Rows without one sort last. */
+  order?: number;
+}
+
+/** One principle of the leadership band. */
+export interface Leadership {
+  id: string;
+  name: string;
+  description: string;
+  /** `Portfolio Content` — ids into the portfolio DB, the artifacts backing it. */
+  portfolioContentIds: string[];
+  /** `Order` (number) — the authored sequence. Rows without one sort last. */
+  order?: number;
+}
+
+/** One cell of the scope band. */
+export interface Stat {
+  id: string;
+  name: string;
+  /** Free text, not a number — a stat may read "12" or "12+". */
+  value: string;
+  description: string;
+  /** `Order` (number) — the authored sequence. Rows without one sort last. */
+  order?: number;
+}
+
+/** One column of the capability map. */
+export interface Capability {
+  id: string;
+  name: string;
+  items: string[];
+  /** `Order` (number) — the authored sequence. Rows without one sort last. */
+  order?: number;
 }
 
 export interface Language {
@@ -231,6 +306,8 @@ export async function fetchJobHistory(): Promise<Job[]> {
         organizationId: notionJob["Organization"].relation[0].id,
         date: notionJob["Dates"].rich_text?.[0]?.text?.content,
         description: notionJob["Description"].rich_text,
+        scope: plainText(notionJob["Scope"]),
+        outcome: plainText(notionJob["Outcome"]),
       } as Job)
   );
 }
@@ -263,7 +340,84 @@ export async function fetchSkills(): Promise<Skill[]> {
         id: id,
         name: notionSkill["Name"].title[0].text.content,
         percentage: notionSkill["Percentage"].number * 100,
+        order: notionSkill["Order"]?.number ?? undefined,
       } as Skill)
+  );
+}
+
+export async function fetchLeadership(): Promise<Leadership[]> {
+  const databaseId = process.env.NOTION_LEADERSHIP_DB_ID;
+  // as with the stats and capabilities below, an unset id falls back to the
+  // repo's copy rather than failing the build
+  if (!databaseId) {
+    return [];
+  }
+
+  const notionLeadership = await _fetchNotionData(databaseId);
+  return notionLeadership.map(
+    ({ id, properties: notionPrinciple }) =>
+      ({
+        id,
+        name: notionPrinciple["Name"].title
+          .map((run: any) => run.plain_text ?? run.text?.content ?? "")
+          .join("")
+          .trim(),
+        description: plainText(notionPrinciple["Description"]) ?? "",
+        portfolioContentIds: (
+          notionPrinciple["Portfolio Content"]?.relation ?? []
+        ).map((item: any) => item.id),
+        order: notionPrinciple["Order"]?.number ?? undefined,
+      } as Leadership)
+  );
+}
+
+export async function fetchStats(): Promise<Stat[]> {
+  const databaseId = process.env.NOTION_STATS_DB_ID;
+  // as with the capabilities below, an unset id falls back to the repo's copy
+  // rather than failing the build
+  if (!databaseId) {
+    return [];
+  }
+
+  const notionStats = await _fetchNotionData(databaseId);
+  return notionStats.map(
+    ({ id, properties: notionStat }) =>
+      ({
+        id,
+        name: notionStat["Name"].title
+          .map((run: any) => run.plain_text ?? run.text?.content ?? "")
+          .join("")
+          .trim(),
+        value: plainText(notionStat["Value"]) ?? "",
+        description: plainText(notionStat["Description"]) ?? "",
+        order: notionStat["Order"]?.number ?? undefined,
+      } as Stat)
+  );
+}
+
+export async function fetchCapabilities(): Promise<Capability[]> {
+  const databaseId = process.env.NOTION_CAPABILITIES_DB_ID;
+  // the section falls back to the repo's own copy without this one, so an unset
+  // id is a missing column of copy rather than a broken build
+  if (!databaseId) {
+    return [];
+  }
+
+  const notionCapabilities = await _fetchNotionData(databaseId);
+  return notionCapabilities.map(
+    ({ id, properties: notionCapability }) =>
+      ({
+        id,
+        // titles here are typed with a trailing newline as often as not
+        name: notionCapability["Name"].title
+          .map((run: any) => run.plain_text ?? run.text?.content ?? "")
+          .join("")
+          .trim(),
+        items: notionCapability["Items"].multi_select.map(
+          (item: any) => item.name
+        ),
+        order: notionCapability["Order"]?.number ?? undefined,
+      } as Capability)
   );
 }
 
@@ -309,6 +463,8 @@ export async function fetchPortfolioContent(): Promise<PortfolioItem[]> {
                 .map((r: any) => r.text.content)
                 .reduce((prev: string, i: string) => prev.concat(i), "")
             : undefined,
+        featured: notionPortfolioItem["Featured"]?.checkbox === true,
+        kind: notionPortfolioItem["Kind"]?.select?.name,
       } as PortfolioItem)
   );
 }

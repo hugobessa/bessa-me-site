@@ -1,6 +1,16 @@
 import Image from "next/image";
 
-export const Hero = ({ meta }: { meta: string[] }) => (
+export const Hero = ({
+  meta,
+  highlight,
+}: {
+  meta: string[];
+  /**
+   * The one meta item that isn't a fact about where he is — the size of what he
+   * runs. Filled rather than muted so it reads first in the row.
+   */
+  highlight?: string;
+}) => (
   <section
     id="hero"
     className="grid lg:grid-cols-[1fr_300px] border-b-2 border-ink scroll-mt-[var(--nav-h)]"
@@ -19,10 +29,10 @@ export const Hero = ({ meta }: { meta: string[] }) => (
       </p>
       <div className="flex flex-wrap border-2 border-ink self-start">
         <a
-          href="#work"
+          href="#leadership"
           className="font-mono text-xs font-extrabold uppercase tracking-[.12em] px-[18px] py-[14px] bg-accent text-on-accent border-r-2 border-ink"
         >
-          see the work
+          how i lead
         </a>
         <a
           href="#contact"
@@ -31,11 +41,14 @@ export const Hero = ({ meta }: { meta: string[] }) => (
           say hello
         </a>
       </div>
-      {meta.length > 0 && (
-        <div className="flex flex-wrap gap-[18px] pt-[14px] border-t-2 border-dotted border-rule font-mono text-[11px] font-bold uppercase tracking-[.1em] text-ink-muted">
+      {(meta.length > 0 || !!highlight) && (
+        <div className="flex flex-wrap items-center gap-[18px] pt-[14px] border-t-2 border-dotted border-rule font-mono text-[11px] font-bold uppercase tracking-[.1em] text-ink-muted">
           {meta.map((item) => (
             <span key={item}>{item}</span>
           ))}
+          {highlight && (
+            <span className="bg-surface-2 text-ink px-2 py-1">{highlight}</span>
+          )}
         </div>
       )}
     </div>

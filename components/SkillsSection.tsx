@@ -1,54 +1,64 @@
-import { Language, Skill } from "@/app/notion-data";
+import { Language } from "@/app/notion-data";
 import { Section } from "./Section";
+import { gridCellRuleClassName } from "./styles";
 
-/**
- * Two-column mono grid. Cells rule right (solid ink) and down (dotted), and the
- * bottom row drops its rule so the section's own border closes the block.
- * The last-row test differs between the 1-column and 2-column layouts, so each
- * cell emits at most one base rule plus at most one `sm:` override — never two
- * competing declarations of the same property.
- */
-const cellClassName = (index: number, count: number) => {
-  const isLast = index === count - 1;
-  const lastRowStartsAt = count - (count % 2 === 0 ? 2 : 1);
-  const isInLastRowOfTwo = index >= lastRowStartsAt;
-
-  return [
-    "flex items-center gap-3 px-5 sm:px-6 py-3 min-w-0",
-    isLast ? "" : "[border-bottom:2px_dotted_var(--rule)]",
-    isInLastRowOfTwo && !isLast ? "sm:[border-bottom:0]" : "",
-    "sm:odd:[border-right:2px_solid_var(--ink)]",
-  ].join(" ");
-};
+/** One column of the capability map: a label and the things under it. */
+export interface CapabilityGroup {
+  label: string;
+  items: string[];
+}
 
 const nameClassName = "font-mono text-xs font-bold uppercase text-ink";
 
-export const SkillsSection = ({ skills }: { skills: Skill[] }) => (
-  <Section id="skills" title="skills">
-    <div className="grid sm:grid-cols-2">
-      {skills?.map((skill, index) => (
-        <div key={skill.id} className={cellClassName(index, skills.length)}>
-          {/* the name takes the slack and wraps — names here run as long as
-              "Software Engineering Teams Leadership", which no fixed column
-              holds without an ellipsis. The fixed bar and value keep every
-              row's gauge aligned on the right regardless. */}
-          <span className={`flex-1 min-w-0 ${nameClassName}`}>{skill.name}</span>
-          <span className="w-20 sm:w-28 shrink-0 block h-3 border-2 border-ink bg-surface">
-            <span
-              className="block h-full"
-              style={{
-                width: `${skill.percentage}%`,
-                background:
-                  skill.percentage >= 100 ? "var(--ink)" : "var(--accent)",
-              }}
-            />
+/**
+ * The capability map: four unranked columns, plus the toolbelt as one mono
+ * line. Deliberately without a score — a self-rated gauge says less than the
+ * list itself, and reads as an IC's inventory rather than a manager's remit.
+ */
+export const SkillsSection = ({
+  groups,
+  toolbelt,
+}: {
+  groups: CapabilityGroup[];
+  toolbelt: string[];
+}) => (
+  <Section id="skills" title="what i'm good at">
+    <div className="grid sm:grid-cols-4">
+      {groups?.map((group, index) => (
+        <div
+          key={group.label}
+          className={`flex flex-col gap-3 px-5 py-5 ${gridCellRuleClassName(
+            index,
+            groups.length,
+            4
+          )}`}
+        >
+          <span className="meta bg-accent text-on-accent px-2 py-1 self-start">
+            {group.label}
           </span>
-          <span className="w-6 shrink-0 text-right font-mono text-[11px] font-bold text-ink">
-            {skill.percentage}
-          </span>
+          <ul className="list-none m-0 p-0 flex flex-col gap-2">
+            {group.items.map((item) => (
+              <li
+                key={item}
+                className="text-sm font-medium leading-[1.4] text-ink-body"
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
         </div>
       ))}
     </div>
+    {/* the stack is a footnote to the capabilities, not a column of its own —
+        one muted line under a solid rule keeps it in that register */}
+    {toolbelt?.length > 0 && (
+      <div className="flex gap-3 items-baseline flex-wrap px-5 sm:px-6 py-3.5 border-t-2 border-ink bg-surface-2">
+        <span className="meta text-ink-muted">toolbelt</span>
+        <span className="font-mono text-[11px] font-medium uppercase tracking-[.1em] text-ink-muted">
+          {toolbelt.join(" · ")}
+        </span>
+      </div>
+    )}
   </Section>
 );
 
@@ -58,7 +68,11 @@ export const LanguagesSection = ({ languages }: { languages: Language[] }) => (
       {languages?.map((language, index) => (
         <div
           key={language.id}
-          className={cellClassName(index, languages.length)}
+          className={`flex items-center gap-3 px-5 sm:px-6 py-3 min-w-0 ${gridCellRuleClassName(
+            index,
+            languages.length,
+            2
+          )}`}
         >
           {/* language names are short, so a fixed column keeps levels aligned */}
           <span className={`w-28 shrink-0 ${nameClassName}`}>

@@ -13,6 +13,8 @@ export const JobsHistory = ({ jobsData, organizationsDataHash }: { jobsData: Job
       detail: job.title,
       organization: organizationsDataHash[job.organizationId],
       description: job.description,
+      scope: job.scope,
+      outcome: job.outcome,
     }))}
   />
 );

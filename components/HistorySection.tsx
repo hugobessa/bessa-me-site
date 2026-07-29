@@ -14,6 +14,13 @@ export interface HistoryEntry {
   detail: string;
   organization: Organization;
   description: NotionRichTextItemType[];
+  /** Team size, remit, span — a chip above the outcome. Omitted rows drop it. */
+  scope?: string;
+  /**
+   * What the role produced, always visible. The description behind `see more`
+   * stays the long version; this is the one line worth reading without a click.
+   */
+  outcome?: string;
 }
 
 /** Row padding, which the rail has to bridge to stay unbroken between rows. */
@@ -84,6 +91,16 @@ const HistoryRow = ({
           </a>{" "}
           — {entry.detail}
         </div>
+        {entry.scope && (
+          <span className="meta self-start bg-surface-2 text-ink px-2 py-1">
+            {entry.scope}
+          </span>
+        )}
+        {entry.outcome && (
+          <p className="text-sm font-medium leading-[1.5] text-ink-body max-w-[68ch]">
+            {entry.outcome}
+          </p>
+        )}
         {isOpen && (
           <div className="text-sm leading-[1.5] text-ink-body border-2 border-ink bg-surface-2 p-3">
             <NotionRichText richText={entry.description} />

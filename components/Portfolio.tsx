@@ -3,6 +3,7 @@
 import { PortfolioItem } from "@/app/notion-data";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
+import { CONTENT_FORMAT_TAGS } from "./contentFormat";
 import { Section } from "./Section";
 import { chipClassName, fieldBaseClassName } from "./styles";
 
@@ -67,11 +68,13 @@ const DefaultThumb = ({ title }: { title: string }) => {
   );
 };
 
-const ContentCard = ({ item, selectedTags, onTagClick }: { item: PortfolioItem, selectedTags: string[], onTagClick: (tag: string) => void }) => (
-  <ContentCardWrapper
-    link={item.link}
-    className="flex flex-col border-r-2 border-b-2 border-ink"
-  >
+/**
+ * The card's cover plus, when the item declares one, its format. The tag reads
+ * the format — talk, writing, open source — which the tag row below can't: those
+ * are topics, so a conference talk and a blog post look identical without this.
+ */
+const CardCover = ({ item }: { item: PortfolioItem }) => (
+  <div className="relative">
     {item.image ? (
       <Image
         alt={item.title}
@@ -94,6 +97,22 @@ const ContentCard = ({ item, selectedTags, onTagClick }: { item: PortfolioItem, 
     ) : (
       <DefaultThumb title={item.title} />
     )}
+    {item.kind && (
+      /* an embed cover is an interactive iframe — the tag must not eat clicks
+         meant for its play button */
+      <span className="meta absolute left-2.5 bottom-2.5 bg-ink text-surface px-2 py-1 pointer-events-none">
+        {item.kind}
+      </span>
+    )}
+  </div>
+);
+
+const ContentCard = ({ item, selectedTags, onTagClick }: { item: PortfolioItem, selectedTags: string[], onTagClick: (tag: string) => void }) => (
+  <ContentCardWrapper
+    link={item.link}
+    className="flex flex-col border-r-2 border-b-2 border-ink"
+  >
+    <CardCover item={item} />
     <div className="flex flex-col gap-2.5 flex-1 p-3.5">
       <h3 className="font-titles font-black text-[17px] leading-[1.2] text-ink">
         {item.title}
@@ -119,11 +138,23 @@ const ContentCard = ({ item, selectedTags, onTagClick }: { item: PortfolioItem, 
 
 const unaccent = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-/** How many filter tags the header shows before the rest go behind `+n more`. */
-const HEADER_TAG_COUNT = 4;
+const priorityRank = (tag: string) => {
+  const index = CONTENT_FORMAT_TAGS.indexOf(tag.toLowerCase());
+  return index === -1 ? CONTENT_FORMAT_TAGS.length : index;
+};
+
+/**
+ * Floor for how many filter tags the header shows, in case the vocabulary ever
+ * carries none of the tags above — a header holding nothing but `+18 more`
+ * reads as broken.
+ */
+const HEADER_TAG_COUNT = 3;
 
 /** Cards shown before the section folds — two full rows on a three-up grid. */
 const FOLDED_CARD_COUNT = 6;
+
+/** Pinned picks above the grid — one full row on a three-up grid. */
+const FEATURED_CARD_COUNT = 3;
 
 const tagClassName = (isSelected: boolean) =>
   `font-mono text-[11px] font-bold uppercase tracking-[.12em] px-2.5 py-[7px] border-2 border-ink whitespace-nowrap transition-hard duration-120 ease-linear ${
@@ -164,24 +195,46 @@ export const Portfolio = ({ portfolioData, tags }: { portfolioData: PortfolioIte
   };
 
   // selected tags sort to the front so an active filter is never the one
-  // hidden behind `+n more` (Array.sort is stable, so tag order survives)
+  // hidden behind `+n more`, then the formats, then the topics in the order
+  // they came (Array.sort is stable, so that order survives within each rank)
   const orderedTags = [...(tags ?? [])].sort(
     (a, b) =>
-      Number(selectedTags.includes(b)) - Number(selectedTags.includes(a))
+      Number(selectedTags.includes(b)) - Number(selectedTags.includes(a)) ||
+      priorityRank(a) - priorityRank(b)
   );
-  const headerTags = orderedTags.slice(0, HEADER_TAG_COUNT);
-  const remainingTags = orderedTags.slice(HEADER_TAG_COUNT);
+  // the header holds every format plus whatever is actively filtering — both
+  // groups have already sorted to the front, so one slice takes them all
+  const headerTagCount = Math.max(
+    HEADER_TAG_COUNT,
+    orderedTags.filter(
+      (tag) =>
+        priorityRank(tag) < CONTENT_FORMAT_TAGS.length ||
+        selectedTags.includes(tag)
+    ).length
+  );
+  const headerTags = orderedTags.slice(0, headerTagCount);
+  const remainingTags = orderedTags.slice(headerTagCount);
   const hasFilters = selectedTags.length > 0 || searchText !== "";
 
+  // The pinned row is an editorial default, so a reader who has started
+  // filtering has overruled it — once that happens the picks go back into the
+  // grid and the results are just the results.
+  const featuredContent = hasFilters
+    ? []
+    : (portfolioData ?? [])
+        .filter((item: PortfolioItem) => item.featured)
+        .slice(0, FEATURED_CARD_COUNT);
+  const featuredIds = new Set(featuredContent.map((item) => item.id));
+  const gridContent = filteredContent.filter(
+    (item: PortfolioItem) => !featuredIds.has(item.id)
+  );
+
   const visibleContent = isUnfolded
-    ? filteredContent
-    : filteredContent.slice(0, FOLDED_CARD_COUNT);
+    ? gridContent
+    : gridContent.slice(0, FOLDED_CARD_COUNT);
   // counted off the total, not off what's on screen, so the control survives
   // its own expansion and can offer `show less`
-  const foldedCount = Math.max(
-    0,
-    filteredContent.length - FOLDED_CARD_COUNT
-  );
+  const foldedCount = Math.max(0, gridContent.length - FOLDED_CARD_COUNT);
 
   return (
     <Section
@@ -249,6 +302,27 @@ export const Portfolio = ({ portfolioData, tags }: { portfolioData: PortfolioIte
         <div className="px-5 sm:px-6 py-6 font-mono text-[11px] font-bold uppercase tracking-[.12em] text-ink-muted">
           no items match this filter
         </div>
+      )}
+      {featuredContent.length > 0 && (
+        <>
+          <div className="flex items-center gap-2.5 flex-wrap px-5 sm:px-6 py-3 border-b-2 border-ink bg-surface">
+            <span className="meta bg-accent text-on-accent px-2 py-1">
+              featured
+            </span>
+          </div>
+          {/* keeps its bottom rule, unlike the grid below — that rule is what
+              separates the pinned row from the rest */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 -mr-0.5">
+            {featuredContent.map((item) => (
+              <ContentCard
+                key={item.id}
+                item={item}
+                selectedTags={selectedTags}
+                onTagClick={handleTagClick}
+              />
+            ))}
+          </div>
+        </>
       )}
       {/* cells carry right/bottom rules; the negative margin tucks the outer
           ones under the card border — or under the unfold bar — instead of
