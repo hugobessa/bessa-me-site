@@ -54,11 +54,11 @@ export const Hero = ({
     </div>
     <div className="flex items-end bg-stripes min-h-[280px] border-t-2 lg:border-t-0 border-ink">
       <Image
-        src="/imgs/my-pic.png"
+        src="/imgs/my-pic.jpg"
         width={400}
         height={386}
         alt="Hugo Bessa"
-        className="w-full h-full max-h-[380px] object-contain object-bottom"
+        className="h-full object-cover object-bottom"
       />
     </div>
   </section>
